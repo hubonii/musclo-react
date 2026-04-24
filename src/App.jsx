@@ -1,0 +1,103 @@
+// Root app shell: providers, error boundary, and router.
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './router';
+import { ToastProvider } from './components/ui/Toast';
+import { TooltipProvider } from './components/ui/Tooltip';
+import { useAuthStore } from './stores/useAuthStore';
+import ErrorBoundary from './components/ui/ErrorBoundary';
+import { initOfflineSync, flushQueue, getPendingCount } from './lib/offlineQueue';
+import { WifiOff } from 'lucide-react';
+
+const queryClient = new QueryClient({
+    defaultOptions: {
+        queries: {
+            staleTime: 5 * 60 * 1000, // 5 minutes
+            retry: 1,
+            refetchOnWindowFocus: false,
+        },
+    },
+});
+
+// Global offline status banner component.
+function OfflineBanner() {
+    const [isOnline, setIsOnline] = useState(navigator.onLine);
+    const [pendingCount, setPendingCount] = useState(getPendingCount());
+    const [syncing, setSyncing] = useState(false);
+
+    useEffect(() => {
+        const handleOnline = async () => {
+            setIsOnline(true);
+            // Auto-flush queued workouts when connectivity returns.
+            const count = getPendingCount();
+            if (count > 0) {
+                setSyncing(true);
+                await flushQueue();
+                setPendingCount(getPendingCount());
+                setSyncing(false);
+            }
+        };
+        const handleOffline = () => {
+            setIsOnline(false);
+            setPendingCount(getPendingCount());
+        };
+
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+        return () => {
+            window.removeEventListener('online', handleOnline);
+            window.removeEventListener('offline', handleOffline);
+        };
+    }, []);
+
+    // Periodically check pending count.
+    useEffect(() => {
+        const interval = setInterval(() => setPendingCount(getPendingCount()), 5000);
+        return () => clearInterval(interval);
+    }, []);
+
+    if (isOnline && pendingCount === 0) return null;
+
+    return (
+        <div className="fixed top-0 left-0 right-0 z-[200] flex items-center justify-center gap-2 px-4 py-2.5 text-center transition-all"
+            style={{ background: isOnline ? 'rgba(234, 88, 12, 0.95)' : 'rgba(245, 158, 11, 0.95)' }}
+        >
+            {!isOnline && <WifiOff size={14} className="text-white flex-shrink-0" />}
+            <span className="text-[10px] font-black uppercase tracking-[0.15em] text-white">
+                {syncing
+                    ? 'Syncing pending workouts...'
+                    : !isOnline
+                        ? `You're offline — data is cached${pendingCount > 0 ? ` • ${pendingCount} workout${pendingCount > 1 ? 's' : ''} pending` : ''}`
+                        : `${pendingCount} workout${pendingCount > 1 ? 's' : ''} pending sync`
+                }
+            </span>
+        </div>
+    );
+}
+
+function App() {
+    useEffect(() => {
+        const publicPages = ['/login', '/register'];
+
+        // Restore auth state for protected pages after reload.
+        if (!publicPages.includes(window.location.pathname)) {
+            useAuthStore.getState().fetchUser();
+        }
+
+        // Initialize offline workout sync listeners.
+        const cleanup = initOfflineSync();
+        return cleanup;
+    }, []);
+    return (<QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <ToastProvider>
+          <ErrorBoundary>
+            <OfflineBanner />
+            <RouterProvider router={router}/>
+          </ErrorBoundary>
+        </ToastProvider>
+      </TooltipProvider>
+    </QueryClientProvider>);
+}
+export default App;
