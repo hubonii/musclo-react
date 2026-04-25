@@ -20,8 +20,8 @@ const SUGGESTED_PROMPTS = [
 
 // Curated models for different tasks.
 const FREE_MODELS = [
-    { id: 'openai/gpt-oss-120b:free', name: '🚀 GPT OSS 120B', desc: 'Maximum Reasoning' },
-    { id: 'google/gemma-4-31b-it:free', name: '👁️ Vision + Smart', desc: 'Best for Photos & Analysis' },
+    { id: 'openai/gpt-oss-120b:free', name: 'GPT OSS 120B', desc: 'Maximum Reasoning' },
+    { id: 'google/gemma-4-31b-it:free', name: 'Google Gemma 4', desc: 'Best for Photos & Analysis' },
 ];
 
 const DEFAULT_MODEL_ID = FREE_MODELS[0].id;
@@ -252,9 +252,9 @@ export default function AIChatComponent() {
                                         onClick={() => setShowModelPicker(!showModelPicker)}
                                         className="w-full flex items-center gap-2.5 px-4 py-2.5 bg-app shadow-neu-inset rounded-2xl text-left transition-all hover:shadow-neu-sm group border border-divider/10"
                                     >
-                                        <Cpu size={14} className="text-orange flex-shrink-0"/>
+                                        <Cpu size={14} className="text-orange flex-shrink-0" />
                                         <span className="text-[11px] font-black text-text-secondary uppercase tracking-wider truncate flex-1">{currentModelLabel}</span>
-                                        <ChevronDown size={14} className={cn("text-text-muted transition-transform", showModelPicker && "rotate-180")}/>
+                                        <ChevronDown size={14} className={cn("text-text-muted transition-transform", showModelPicker && "rotate-180")} />
                                     </button>
                                     <AnimatePresence>
                                         {showModelPicker && (
@@ -276,7 +276,7 @@ export default function AIChatComponent() {
                                                                 : "text-text-secondary hover:text-text-primary hover:bg-app/50"
                                                         )}
                                                     >
-                                                        <div className={cn("w-2 h-2 rounded-full flex-shrink-0", (selectedModel || DEFAULT_MODEL_ID) === m.id ? "bg-orange shadow-[0_0_6px_rgba(234,88,12,0.5)]" : "bg-divider")}/>
+                                                        <div className={cn("w-2 h-2 rounded-full flex-shrink-0", (selectedModel || DEFAULT_MODEL_ID) === m.id ? "bg-orange shadow-[0_0_6px_rgba(234,88,12,0.5)]" : "bg-divider")} />
                                                         <div>
                                                             <div className="text-[12px] font-black">{m.name}</div>
                                                             <div className="text-[9px] font-bold text-text-muted mt-0.5 uppercase tracking-wider">{m.desc}</div>
@@ -345,7 +345,7 @@ export default function AIChatComponent() {
                                         <motion.div key={msg.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className={cn("flex flex-col gap-3", msg.role === 'user' ? "items-end" : "items-start")}>
                                             <div className={cn("flex gap-5 max-w-[94%]", msg.role === 'user' ? "flex-row-reverse" : "flex-row")}>
                                                 <div className={cn("w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-neu-sm", msg.role === 'user' ? "bg-orange text-white shadow-neu-orange" : "bg-surface text-orange border border-divider/10")}>
-                                                    {msg.role === 'user' ? <User size={24}/> : <BrainCircuit size={24}/>}
+                                                    {msg.role === 'user' ? <User size={24} /> : <BrainCircuit size={24} />}
                                                 </div>
                                                 <div className="flex flex-col gap-4 flex-1">
                                                     {msg.image_url && (
@@ -375,20 +375,20 @@ export default function AIChatComponent() {
                                                         {/* Streaming text with blinking cursor */}
                                                         {msg.content && (
                                                             <div className="prose prose-sm dark:prose-invert max-w-none break-words space-y-4">
-                                                                <ReactMarkdown 
+                                                                <ReactMarkdown
                                                                     remarkPlugins={[remarkGfm]}
                                                                     components={{
-                                                                        table: ({node, ...props}) => <div className="overflow-x-auto my-4 rounded-2xl border border-divider"><table className="min-w-full divide-y divide-divider" {...props} /></div>,
-                                                                        th: ({node, ...props}) => <th className="px-4 py-3 bg-app text-left text-[11px] font-black uppercase tracking-wider text-text-muted" {...props} />,
-                                                                        td: ({node, ...props}) => <td className="px-4 py-3 text-[13px] border-t border-divider" {...props} />,
-                                                                        h3: ({node, ...props}) => <h3 className="text-orange font-black uppercase tracking-tight text-sm mt-6 mb-2" {...props} />,
-                                                                        p: ({node, ...props}) => <p className="mb-4 last:mb-0" {...props} />
+                                                                        table: ({ node, ...props }) => <div className="overflow-x-auto my-4 rounded-2xl border border-divider"><table className="min-w-full divide-y divide-divider" {...props} /></div>,
+                                                                        th: ({ node, ...props }) => <th className="px-4 py-3 bg-app text-left text-[11px] font-black uppercase tracking-wider text-text-muted" {...props} />,
+                                                                        td: ({ node, ...props }) => <td className="px-4 py-3 text-[13px] border-t border-divider" {...props} />,
+                                                                        h3: ({ node, ...props }) => <h3 className="text-orange font-black uppercase tracking-tight text-sm mt-6 mb-2" {...props} />,
+                                                                        p: ({ node, ...props }) => <p className="mb-4 last:mb-0" {...props} />
                                                                     }}
                                                                 >
                                                                     {msg.content}
                                                                 </ReactMarkdown>
                                                                 {msg.isStreaming && (
-                                                                    <span className="inline-block w-[3px] h-[1.1em] bg-orange/80 ml-0.5 align-middle rounded-full" style={{ animation: 'cursorBlink 0.8s steps(1) infinite' }}/>
+                                                                    <span className="inline-block w-[3px] h-[1.1em] bg-orange/80 ml-0.5 align-middle rounded-full" style={{ animation: 'cursorBlink 0.8s steps(1) infinite' }} />
                                                                 )}
                                                             </div>
                                                         )}
