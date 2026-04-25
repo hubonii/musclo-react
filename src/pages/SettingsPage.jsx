@@ -16,6 +16,7 @@ import { apiClient } from '../api/axios';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import Avatar from '../components/ui/Avatar';
 import Modal from '../components/ui/Modal';
+import { compressImage } from '../lib/imageCompression';
 
 export default function SettingsPage() {
     const { data: settings, isLoading: loadingSettings } = useSettings();
@@ -84,7 +85,9 @@ export default function SettingsPage() {
             }
             setIsUploadingAvatar(true);
             try {
-                await updateAvatar(file);
+                // Compress the image locally before sending to server
+                const compressedFile = await compressImage(file, { maxWidth: 800, quality: 0.8 });
+                await updateAvatar(compressedFile);
                 toast('success', 'Profile photo updated!');
             } catch (err) {
                 toast('error', 'Upload failed', err.message);
