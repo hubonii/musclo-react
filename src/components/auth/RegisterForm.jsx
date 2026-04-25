@@ -23,7 +23,6 @@ export default function RegisterForm() {
         e.preventDefault();
         setValidationError('');
 
-        // Local password confirmation check before API request.
         if (password !== passwordConfirm) {
             setValidationError('Passwords do not match');
             return;
@@ -33,12 +32,38 @@ export default function RegisterForm() {
             toast('success', 'Account created!', 'Please check your email for a verification code.');
             navigate('/verify-email', { replace: true });
         } catch (err) {
-            // Error mapping order: field validation payload, response message, default message.
             const message = err instanceof Error ? err.message : 'An error occurred';
             const axiosData = err?.response?.data;
             const firstError = axiosData?.errors ? Object.values(axiosData.errors)[0]?.[0] : null;
             toast('error', 'Registration failed', firstError || axiosData?.message || message || 'Please try again.');
         }
+    };
+
+    const handleGoogleLogin = () => {
+        const width = 500;
+        const height = 600;
+        const left = window.screenX + (window.outerWidth - width) / 2;
+        const top = window.screenY + (window.outerHeight - height) / 2;
+        
+        window.open(
+            `${import.meta.env.VITE_API_URL}/api/auth/google`,
+            'google-login',
+            `width=${width},height=${height},left=${left},top=${top}`
+        );
+        
+        const handleMessage = (event) => {
+            if (event.origin !== import.meta.env.VITE_API_URL) return;
+
+            if (event.data?.type === 'GOOGLE_AUTH_SUCCESS') {
+                localStorage.setItem('musclo-token', event.data.token);
+                useAuthStore.getState().fetchUser();
+                toast('success', 'Welcome to Musclo!');
+                navigate('/dashboard', { replace: true });
+                window.removeEventListener('message', handleMessage);
+            }
+        };
+        
+        window.addEventListener('message', handleMessage);
     };
 
     return (
@@ -101,7 +126,7 @@ export default function RegisterForm() {
                 type="button" 
                 variant="secondary" 
                 className="w-full flex items-center justify-center gap-3 py-3"
-                onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/api/auth/google`}
+                onClick={handleGoogleLogin}
             >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>

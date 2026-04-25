@@ -7,34 +7,78 @@ import { useAuthStore } from '../../stores/useAuthStore';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import { useToast } from '../ui/Toast';
+
 export default function LoginForm() {
-const [email, setEmail] = useState('');
-const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
     const { login, isAuthenticating } = useAuthStore();
     const navigate = useNavigate();
     const { toast } = useToast();
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-
             await login(email, password);
             toast('success', 'Welcome back!');
             navigate('/dashboard', { replace: true });
-        }
-        catch (err) {
-            // Prefer backend message when available, otherwise fall back to generic errors.
+        } catch (err) {
             const message = err instanceof Error ? err.message : 'An error occurred';
             const axiosMessage = err?.response?.data?.message;
             toast('error', 'Login failed', axiosMessage || message);
         }
     };
-return (<form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
-            <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} icon={<Mail size={18}/>} placeholder="you@example.com" required/>
+
+    const handleGoogleLogin = () => {
+        const width = 500;
+        const height = 600;
+        const left = window.screenX + (window.outerWidth - width) / 2;
+        const top = window.screenY + (window.outerHeight - height) / 2;
+        
+        window.open(
+            `${import.meta.env.VITE_API_URL}/api/auth/google`,
+            'google-login',
+            `width=${width},height=${height},left=${left},top=${top}`
+        );
+        
+        const handleMessage = (event) => {
+            if (event.origin !== import.meta.env.VITE_API_URL) return;
+
+            if (event.data?.type === 'GOOGLE_AUTH_SUCCESS') {
+                localStorage.setItem('musclo-token', event.data.token);
+                useAuthStore.getState().fetchUser();
+                toast('success', 'Welcome back!');
+                navigate('/dashboard', { replace: true });
+                window.removeEventListener('message', handleMessage);
+            }
+        };
+        
+        window.addEventListener('message', handleMessage);
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
+            <Input 
+                label="Email" 
+                type="email" 
+                value={email} 
+                onChange={(e) => setEmail(e.target.value)} 
+                icon={<Mail size={18}/>} 
+                placeholder="you@example.com" 
+                required
+            />
 
             <div className="space-y-1">
-                <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} icon={<Lock size={18}/>} placeholder="••••••••" required/>
+                <Input 
+                    label="Password" 
+                    type="password" 
+                    value={password} 
+                    onChange={(e) => setPassword(e.target.value)} 
+                    icon={<Lock size={18}/>} 
+                    placeholder="••••••••" 
+                    required
+                />
                 <div className="flex justify-end">
-                    <Link to="/forgot-password" className="text-[11px] font-black text-orange uppercase tracking-wider hover:opacity-70 transition-all">
+                    <Link to="/forgot-password" university className="text-[11px] font-black text-orange uppercase tracking-wider hover:opacity-70 transition-all">
                         Forgot Password?
                     </Link>
                 </div>
@@ -57,7 +101,7 @@ return (<form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
                 type="button" 
                 variant="secondary" 
                 className="w-full flex items-center justify-center gap-3 py-3"
-                onClick={() => window.location.href = `${import.meta.env.VITE_API_URL}/api/auth/google`}
+                onClick={handleGoogleLogin}
             >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -67,7 +111,6 @@ return (<form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
                 </svg>
                 <span className="font-bold">Google</span>
             </Button>
-        </form>);
+        </form>
+    );
 }
-
-
