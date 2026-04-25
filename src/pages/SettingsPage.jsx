@@ -66,6 +66,10 @@ export default function SettingsPage() {
     const handleAvatarUpload = async (e) => {
         const file = e.target.files[0];
         if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                toast('error', 'File too large', 'Maximum photo size is 5MB.');
+                return;
+            }
             try {
                 await updateAvatar(file);
                 toast('success', 'Profile photo updated!');
@@ -150,7 +154,7 @@ export default function SettingsPage() {
                                         <Camera size={24} />
                                         <span className="text-[10px] font-black uppercase mt-1">Change</span>
                                     </button>
-                                    <input type="file" ref={fileInputRef} className="hidden" accept="image/*" onChange={handleAvatarUpload} />
+                                    <input type="file" ref={fileInputRef} className="hidden" accept="image/*,image/heic,image/heif" onChange={handleAvatarUpload} />
                                 </div>
                                 <div className="flex-1 text-center sm:text-left space-y-1">
                                     <h3 className="font-black text-text-primary text-lg">{name || 'Your Name'}</h3>

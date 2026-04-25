@@ -37,6 +37,10 @@ export default function ProfilePage() {
     const handleFileChange = async (e) => {
         const file = e.target.files[0];
         if (file) {
+            if (file.size > 5 * 1024 * 1024) {
+                toast('error', 'File too large', 'Maximum photo size is 5MB.');
+                return;
+            }
             try {
                 await updateAvatar(file);
                 toast('success', 'Profile picture updated!');
@@ -94,7 +98,7 @@ return (
                                     type="file" 
                                     ref={fileInputRef} 
                                     className="hidden" 
-                                    accept="image/*"
+                                    accept="image/*,image/heic,image/heif"
                                     onChange={handleFileChange}
                                 />
                             </>
