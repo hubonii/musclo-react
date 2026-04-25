@@ -18,6 +18,8 @@ export const useAuthStore = create()(persist((set, get) => ({
 
             // Adjusting to match Node.js response structure
             const userData = data.user || data;
+            const token = data.token;
+            if (token) localStorage.setItem('musclo-token', token);
             set({ user: userData, isAuthenticated: true });
         } finally {
             set({ isAuthenticating: false });
@@ -31,6 +33,8 @@ export const useAuthStore = create()(persist((set, get) => ({
             const { data } = await apiClient.post('/register', { name, email, password, password_confirmation });
 
             const userData = data.user || data;
+            const token = data.token;
+            if (token) localStorage.setItem('musclo-token', token);
             set({ user: userData, isAuthenticated: true });
         } finally {
             set({ isAuthenticating: false });
@@ -47,6 +51,7 @@ export const useAuthStore = create()(persist((set, get) => ({
         set({ user: null, isAuthenticated: false });
         // Optional: clear local storage if persist doesn't clear fully
         localStorage.removeItem('musclo-auth');
+        localStorage.removeItem('musclo-token');
     },
 
     // Called on app startup to restore a valid server session.
