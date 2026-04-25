@@ -10,7 +10,7 @@ import Button from '../components/ui/Button';
 import LevelBadge from '../components/profile/LevelBadge';
 import AchievementBadge from '../components/profile/AchievementBadge';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
-import ChangePasswordModal from '../components/profile/ChangePasswordModal';
+// ChangePasswordModal removed - now integrated in settings
 import { useState, useRef } from 'react';
 import { useToast } from '../components/ui/Toast';
 
@@ -19,7 +19,6 @@ export default function ProfilePage() {
     const navigate = useNavigate();
     const authUser = useAuthStore(s => s.user);
     const { updateAvatar, isLoading: isUpdatingAvatar } = useAuthStore();
-    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
     const { toast } = useToast();
     const fileInputRef = useRef(null);
 
@@ -116,10 +115,7 @@ return (
                         {isOwnProfile && (
                             <div className="flex flex-col gap-2 w-full md:w-auto">
                                 <Button variant="secondary" className="w-full flex items-center gap-2" onClick={() => navigate('/settings')}>
-                                     <SettingsIcon size={16}/> Edit Profile
-                                </Button>
-                                <Button variant="ghost" className="w-full flex items-center gap-2 text-[10px] font-black uppercase tracking-wider opacity-60 hover:opacity-100" onClick={() => setIsPasswordModalOpen(true)}>
-                                    <LockIcon size={14}/> Change Password
+                                     <SettingsIcon size={16}/> Account Settings
                                 </Button>
                             </div>
                         )}
@@ -213,10 +209,7 @@ return (
 
             </motion.div>
 
-            <ChangePasswordModal 
-                isOpen={isPasswordModalOpen} 
-                onClose={() => setIsPasswordModalOpen(false)} 
-            />
+            {/* ChangePasswordModal removed - now integrated in settings */}
         </div>
     );
 }

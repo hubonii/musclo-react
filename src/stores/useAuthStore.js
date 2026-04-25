@@ -98,6 +98,20 @@ export const useAuthStore = create()(persist((set, get) => ({
         }
     },
 
+    updateProfile: async (data) => {
+        set({ isLoading: true });
+        try {
+            const response = await apiClient.put('/profile', data);
+            const updatedUser = response.data?.data || response.data;
+            if (updatedUser) {
+                set({ user: updatedUser });
+            }
+            return updatedUser;
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
     updateAvatar: async (file) => {
         set({ isLoading: true });
         try {
