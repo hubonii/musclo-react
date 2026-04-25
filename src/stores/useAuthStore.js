@@ -45,6 +45,10 @@ export const useAuthStore = create()(persist((set, get) => ({
         set({ user: null, isAuthenticated: false });
         localStorage.removeItem('musclo-auth');
         localStorage.removeItem('musclo-token');
+        
+        // Also clear any response cache entries to prevent data leak
+        const { clearAllCache } = await import('../lib/offlineCache');
+        clearAllCache();
     },
 
     fetchUser: async () => {
@@ -165,10 +169,8 @@ export const useAuthStore = create()(persist((set, get) => ({
         set({ isLoading: true });
         try {
             await apiClient.delete('/profile/delete', { data: { password } });
-            // Logout after deletion
-            set({ user: null, isAuthenticated: false });
-            localStorage.removeItem('musclo-auth');
-            localStorage.removeItem('musclo-token');
+            // Logout after deletion triggers full cleanup
+            await get().logout();
         } finally {
             set({ isLoading: false });
         }

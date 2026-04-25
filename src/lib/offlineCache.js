@@ -45,6 +45,18 @@ export function cacheRemove(key) {
 }
 
 /**
+ * Clear all musclo-related cache entries from localStorage.
+ */
+export function clearAllCache() {
+  const keys = Object.keys(localStorage);
+  keys.forEach(key => {
+    if (key.startsWith(CACHE_PREFIX)) {
+      localStorage.removeItem(key);
+    }
+  });
+}
+
+/**
  * Check current online status.
  * @returns {boolean}
  */

@@ -25,8 +25,10 @@ import { queryKeys } from '../api/queryKeys';
 import WorkoutHeader from '../components/workout/WorkoutHeader';
 import ExerciseCard from '../components/workout/ExerciseCard';
 import WorkoutFinishDialog from '../components/workout/WorkoutFinishDialog';
+import { useAuthStore } from '../stores/useAuthStore';
 
 export default function WorkoutPage() {
+    const user = useAuthStore(state => state.user);
     const queryClient = useQueryClient();
     const { routineId } = useParams();
     const navigate = useNavigate();
@@ -260,8 +262,8 @@ export default function WorkoutPage() {
             toast('success', `Protocol Saved. Volume: ${displayWeight}`);
             navigate('/history');
         } catch (err) {
-            // Queue workout for later sync when offline.
-            queueWorkoutSave(payload);
+            // Queue workout for later sync when offline, tagged with current user ID.
+            queueWorkoutSave(payload, user?.id);
             resetWorkout();
             toast('success', 'Saved offline — will sync when connected.');
             navigate('/history');
