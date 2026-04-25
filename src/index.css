@@ -56,6 +56,8 @@
     /* Interactive Elements */
     --accent-orange: #EA580C;
     --orange-rgb: 234, 88, 12;
+    --accent-emerald: #EA580C; /* Mapped to orange for branding consistency */
+    --emerald-rgb: 234, 88, 12;
     --accent-tertiary: #52525B; /* Zinc theme for tertiary elements */
     
     /* Text on Interactive */
@@ -95,6 +97,8 @@
     /* Interactive Elements */
     --accent-orange: #F97316;
     --orange-rgb: 249, 115, 22;
+    --accent-emerald: #F97316;
+    --emerald-rgb: 249, 115, 22;
     --accent-tertiary: #3F3F46;
 
     /* Text on Interactive */
