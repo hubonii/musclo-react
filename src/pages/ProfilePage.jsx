@@ -19,9 +19,8 @@ export default function ProfilePage() {
     const { id } = useParams();
     const navigate = useNavigate();
     const authUser = useAuthStore(s => s.user);
-    const { updateAvatar, isLoading: isUpdatingAvatar } = useAuthStore();
+    const authUser = useAuthStore(s => s.user);
     const { toast } = useToast();
-    const fileInputRef = useRef(null);
 
     // `me` maps to current user profile when route param is missing.
     const resolvedUserId = id || 'me';
@@ -34,21 +33,6 @@ export default function ProfilePage() {
     // Controls owner-only actions such as navigating to editable settings.
     const isOwnProfile = !id || (authUser?.id && parseInt(id, 10) === authUser.id);
 
-    const handleFileChange = async (e) => {
-        const file = e.target.files[0];
-        if (file) {
-            if (file.size > 5 * 1024 * 1024) {
-                toast('error', 'File too large', 'Maximum photo size is 5MB.');
-                return;
-            }
-            try {
-                await updateAvatar(file);
-                toast('success', 'Profile picture updated!');
-            } catch (err) {
-                toast('error', 'Upload failed', err.message);
-            }
-        }
-    };
 
     if (isLoadingProfile) {
         // Initial profile query loading state.
@@ -71,38 +55,12 @@ return (
                 <Card className="flex flex-col md:flex-row items-center md:items-start gap-6 relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-br from-emerald/20 to-transparent pointer-events-none"/>
 
-                    <div className="relative z-10 group">
+                    <div className="relative z-10">
                         <Avatar 
                             name={profile.name} 
                             src={profile.avatar_url} 
                             className="w-28 h-28 sm:w-32 sm:h-32 rounded-full shadow-neu border-4 border-white"
                         />
-                        
-                        {isOwnProfile && (
-                            <>
-                                <button 
-                                    onClick={() => fileInputRef.current?.click()}
-                                    disabled={isUpdatingAvatar}
-                                    className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer border-4 border-transparent"
-                                >
-                                    {isUpdatingAvatar ? (
-                                        <LoadingSpinner size="sm" color="white" />
-                                    ) : (
-                                        <>
-                                            <Camera size={24} />
-                                            <span className="text-[8px] font-black uppercase mt-1">Change</span>
-                                        </>
-                                    )}
-                                </button>
-                                <input 
-                                    type="file" 
-                                    ref={fileInputRef} 
-                                    className="hidden" 
-                                    accept="image/*,image/heic,image/heif"
-                                    onChange={handleFileChange}
-                                />
-                            </>
-                        )}
                     </div>
 
                     <div className="flex-1 text-center md:text-left relative z-10 w-full">
