@@ -52,11 +52,14 @@ export default function LoginForm() {
 
             if (event.data?.type === 'GOOGLE_AUTH_SUCCESS') {
                 localStorage.setItem('musclo-token', event.data.token);
-                // Await user fetch so the state is ready BEFORE we navigate
+                // Force a state refresh and wait for it to be solid
                 useAuthStore.getState().fetchUser().then(() => {
-                    toast('success', 'Welcome back!');
-                    navigate('/dashboard', { replace: true });
-                    cleanup();
+                    const currentState = useAuthStore.getState();
+                    if (currentState.isAuthenticated) {
+                        toast('success', 'Welcome back!');
+                        navigate('/dashboard', { replace: true });
+                        cleanup();
+                    }
                 });
             } else if (event.data?.type === 'GOOGLE_AUTH_FAILURE') {
                 toast('error', 'Authentication failed', 'Google login was cancelled or failed.');
