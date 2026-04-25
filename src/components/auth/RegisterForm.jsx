@@ -63,10 +63,12 @@ export default function RegisterForm() {
 
             if (event.data?.type === 'GOOGLE_AUTH_SUCCESS') {
                 localStorage.setItem('musclo-token', event.data.token);
-                useAuthStore.getState().fetchUser();
-                toast('success', 'Welcome to Musclo!');
-                navigate('/dashboard', { replace: true });
-                cleanup();
+                // Await user fetch so the state is ready BEFORE we navigate
+                useAuthStore.getState().fetchUser().then(() => {
+                    toast('success', 'Welcome to Musclo!');
+                    navigate('/dashboard', { replace: true });
+                    cleanup();
+                });
             } else if (event.data?.type === 'GOOGLE_AUTH_FAILURE') {
                 toast('error', 'Authentication failed', 'Google signup was cancelled or failed.');
                 cleanup();
