@@ -43,9 +43,9 @@ export default function WeeklyVolumeHero({ weeklyVolumeData, weeklyVolumeSum, it
                         <XAxis dataKey="name" stroke="var(--text-muted)" fontSize={10} tickLine={false} axisLine={false} tick={{ fontWeight: 800 }} />
                         <RechartsTooltip cursor={{ fill: 'rgba(0,0,0,0.02)' }} contentStyle={{ backgroundColor: 'var(--bg-surface)', borderRadius: '24px', border: 'none', boxShadow: '0 20px 40px rgba(0,0,0,0.15)', color: 'var(--text-primary)', fontWeight: 'bold' }} />
                         <Bar dataKey="volume" radius={[8, 8, 8, 8]} fill="var(--accent-orange)">
-                            {/* Highlight today's bar and use secondary branding for other days. */}
+                            {/* Make all bars orange as requested by the user. */}
                             {weeklyVolumeData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={entry.isToday ? 'var(--accent-orange)' : 'var(--text-muted)'} fillOpacity={entry.isToday ? 1 : 0.4} />
+                                <Cell key={`cell-${index}`} fill="var(--accent-orange)" fillOpacity={1} />
                             ))}
                         </Bar>
                     </BarChart>
