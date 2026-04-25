@@ -214,9 +214,6 @@ export default function SettingsPage() {
                                 <div className="flex-1 text-center sm:text-left space-y-1">
                                     <h3 className="font-black text-text-primary text-lg">{name || 'Your Name'}</h3>
                                     <p className="text-xs text-text-muted uppercase tracking-widest font-bold">{email}</p>
-                                    <p className="text-xs text-orange font-bold mt-2">
-                                        {user?.google_id ? 'Linked to Google Account' : 'Standard Email Account'}
-                                    </p>
                                 </div>
                             </div>
 
@@ -339,20 +336,6 @@ export default function SettingsPage() {
                             </Card>
                         )}
 
-                        {/* Google Account Notice */}
-                        {user?.google_id && (
-                            <Card className="bg-orange/5 border border-orange/10">
-                                <div className="flex items-start gap-3">
-                                    <AlertCircle className="text-orange shrink-0 mt-0.5" size={20}/>
-                                    <div>
-                                        <h3 className="font-black text-sm uppercase tracking-tight text-orange">Google Account</h3>
-                                        <p className="text-[11px] text-text-secondary mt-1 font-medium leading-relaxed">
-                                            Your account is managed via Google. Email and password changes are handled through your Google Account settings.
-                                        </p>
-                                    </div>
-                                </div>
-                            </Card>
-                        )}
 
                         {/* Data Card */}
                         <Card className="space-y-4">
