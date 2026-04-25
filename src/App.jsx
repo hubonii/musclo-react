@@ -89,7 +89,7 @@ function OfflineBanner() {
 
 function App() {
     useEffect(() => {
-        const publicPages = ['/login', '/register'];
+        const publicPages = ['/login', '/register', '/forgot-password', '/reset-password', '/verify-email'];
 
         // Restore auth state for protected pages after reload.
         if (!publicPages.includes(window.location.pathname)) {

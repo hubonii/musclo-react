@@ -109,13 +109,13 @@ export default function AIChatComponent() {
             return;
         }
 
-        const currentImage = selectedImage;
+        const chatImage = selectedImage;
         if (!msgOverride) {
             setInput('');
             setSelectedImage(null);
         }
 
-        addUserMessage(textToSend, currentImage);
+        addUserMessage(textToSend, chatImage);
         setLoading(true);
         setError(null);
 
@@ -135,20 +135,29 @@ export default function AIChatComponent() {
         setAbortController(controller);
 
         try {
+            // Get CSRF from cookie safely
+            let xsrfToken = '';
+            try {
+                const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+                if (match?.[1]) xsrfToken = decodeURIComponent(match[1]);
+            } catch (e) {
+                console.warn('[AIChat] Failed to parse XSRF token:', e);
+            }
+
             const response = await fetch(`${API_URL}/api/chat`, {
                 method: 'POST',
                 signal: controller.signal,
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'text/event-stream',
-                    'Authorization': `Bearer ${localStorage.getItem('musclo-token')}`,
-                    'X-XSRF-TOKEN': decodeURIComponent(document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1] || ''),
+                    'Authorization': `Bearer ${localStorage.getItem('musclo-token') || ''}`,
+                    'X-XSRF-TOKEN': xsrfToken,
                 },
                 credentials: 'include',
                 body: JSON.stringify({
                     message: textToSend,
                     session_id: currentSessionId,
-                    image: currentImage,
+                    image: chatImage,
                     workout_context: workoutContext,
                     model: selectedModel
                 })

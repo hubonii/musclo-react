@@ -42,6 +42,7 @@ export const router = createBrowserRouter([
     { path: '/register', element: <Suspense fallback={<PageLoader />}><RegisterPage /></Suspense> },
     { path: '/forgot-password', element: <Suspense fallback={<PageLoader />}><ForgotPasswordPage /></Suspense> },
     { path: '/reset-password', element: <Suspense fallback={<PageLoader />}><ResetPasswordPage /></Suspense> },
+    { path: '/verify-email', element: <Suspense fallback={<PageLoader />}><EmailVerificationPage /></Suspense> },
     {
         path: '/',
         element: (
@@ -64,7 +65,6 @@ export const router = createBrowserRouter([
             { path: 'progress', element: <Suspense fallback={<PageLoader />}><ProgressPage /></Suspense> },
             { path: 'profile', element: <Suspense fallback={<PageLoader />}><ProfilePage /></Suspense> },
             { path: 'settings', element: <Suspense fallback={<PageLoader />}><SettingsPage /></Suspense> },
-            { path: 'verify-email', element: <Suspense fallback={<PageLoader />}><EmailVerificationPage /></Suspense> },
         ],
     },
     { path: '*', element: <Suspense fallback={<PageLoader />}><NotFoundPage /></Suspense> },

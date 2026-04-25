@@ -34,7 +34,7 @@ return (<form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
             <div className="space-y-1">
                 <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} icon={<Lock size={18}/>} placeholder="••••••••" required/>
                 <div className="flex justify-end">
-                    <Link to="/forgot-password" size="sm" className="text-[11px] font-black text-orange uppercase tracking-wider hover:opacity-70 transition-all">
+                    <Link to="/forgot-password" className="text-[11px] font-black text-orange uppercase tracking-wider hover:opacity-70 transition-all">
                         Forgot Password?
                     </Link>
                 </div>
