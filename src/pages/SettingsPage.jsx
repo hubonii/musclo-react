@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { 
     User, Mail, Lock, Camera, Globe, Save, 
-    Download, Shield, CheckCircle2, AlertCircle 
+    Download, Shield, CheckCircle2, AlertCircle, Trash2, X
 } from 'lucide-react';
 import { useSettings, useUpdateSettings } from '../hooks/useSettings';
 import { useAuthStore } from '../stores/useAuthStore';
@@ -15,10 +15,15 @@ import { useToast } from '../components/ui/Toast';
 import { apiClient } from '../api/axios';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import Avatar from '../components/ui/Avatar';
+import Modal from '../components/ui/Modal';
 
 export default function SettingsPage() {
     const { data: settings, isLoading: loadingSettings } = useSettings();
-    const { user, updateProfile, updateAvatar, changePassword, isLoading: isAuthLoading } = useAuthStore();
+    const { 
+        user, updateProfile, updateAvatar, changePassword, 
+        requestEmailChange, verifyEmailChange, deleteAccount,
+        isLoading: isAuthLoading 
+    } = useAuthStore();
     const updateSettingsHook = useUpdateSettings();
     const { toast } = useToast();
     const fileInputRef = useRef(null);
@@ -27,6 +32,12 @@ export default function SettingsPage() {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [bio, setBio] = useState('');
+    
+    // UI state
+    const [showEmailModal, setShowEmailModal] = useState(false);
+    const [showDeleteModal, setShowDeleteModal] = useState(false);
+    const [verificationCode, setVerificationCode] = useState('');
+    const [deletePassword, setDeletePassword] = useState('');
     
     // Preferences state
     const [unitSystem, setUnitSystem] = useState('metric');
@@ -119,6 +130,39 @@ export default function SettingsPage() {
         }
     };
 
+    const handleRequestEmailChange = async () => {
+        try {
+            await requestEmailChange(email);
+            setShowEmailModal(true);
+            toast('success', 'Verification code sent to your new email.');
+        } catch (err) {
+            toast('error', 'Failed to send code', err.response?.data?.message || err.message);
+        }
+    };
+
+    const handleVerifyEmail = async () => {
+        try {
+            await verifyEmailChange(verificationCode);
+            setShowEmailModal(false);
+            setVerificationCode('');
+            toast('success', 'Email updated successfully!');
+        } catch (err) {
+            toast('error', 'Verification failed', err.response?.data?.message || err.message);
+        }
+    };
+
+    const handleDeleteAccount = async () => {
+        try {
+            await deleteAccount(deletePassword);
+            toast('success', 'Account deleted.');
+            navigate('/login');
+        } catch (err) {
+            toast('error', 'Deletion failed', err.response?.data?.message || err.message);
+        }
+    };
+
+    const isEmailChanged = email !== user?.email;
+
     if (loadingSettings) {
         return (
             <div className="min-h-screen bg-app flex flex-col items-center justify-center">
@@ -193,6 +237,14 @@ export default function SettingsPage() {
                                     icon={<Mail size={18}/>}
                                     placeholder="your@email.com"
                                     disabled={!!user?.google_id}
+                                    suffix={isEmailChanged && !user?.google_id && (
+                                        <button 
+                                            onClick={handleRequestEmailChange}
+                                            className="px-3 py-1 bg-orange text-white text-[10px] font-black uppercase tracking-widest rounded-lg shadow-neu active:scale-95 transition-all"
+                                        >
+                                            Verify
+                                        </button>
+                                    )}
                                 />
                                 <div className="sm:col-span-2">
                                     <label className="block text-xs font-black uppercase tracking-widest text-text-muted mb-2 ml-1">Bio / Motivation</label>
@@ -320,10 +372,93 @@ export default function SettingsPage() {
                                 <Download size={16} className="mr-2"/> Export Data (.csv)
                             </Button>
                         </Card>
+
+                        {/* Danger Zone */}
+                        <Card className="space-y-4 border-2 border-danger/20 bg-danger/5">
+                            <div className="flex items-center gap-3 border-b border-danger/10 pb-4">
+                                <Trash2 className="text-danger" size={20}/>
+                                <h2 className="font-black text-lg uppercase tracking-tighter text-danger">Danger Zone</h2>
+                            </div>
+                            <p className="text-[11px] text-text-secondary font-medium leading-relaxed">
+                                Once you delete your account, there is no going back. All your data and photos will be permanently wiped.
+                            </p>
+                            <Button 
+                                variant="danger" 
+                                className="w-full"
+                                onClick={() => setShowDeleteModal(true)}
+                            >
+                                <Trash2 size={16} className="mr-2"/> Delete My Account
+                            </Button>
+                        </Card>
                     </div>
 
                 </div>
             </motion.div>
+
+            {/* Email Verification Modal */}
+            <Modal
+                open={showEmailModal}
+                onOpenChange={setShowEmailModal}
+                title="Verify New Email"
+                description={`Enter the code sent to ${email}`}
+                isLoading={isAuthLoading}
+            >
+                <div className="space-y-6 pt-4">
+                    <Input 
+                        label="Verification Code"
+                        placeholder="6-digit code"
+                        value={verificationCode}
+                        onChange={(e) => setVerificationCode(e.target.value)}
+                        className="text-center text-2xl tracking-[0.5em]"
+                        maxLength={6}
+                    />
+                    <Button 
+                        variant="primary" 
+                        className="w-full"
+                        onClick={handleVerifyEmail}
+                        disabled={verificationCode.length !== 6}
+                    >
+                        Verify & Update Email
+                    </Button>
+                </div>
+            </Modal>
+
+            {/* Delete Account Modal */}
+            <Modal
+                open={showDeleteModal}
+                onOpenChange={setShowDeleteModal}
+                title="Are you absolutely sure?"
+                description="This action cannot be undone. Please enter your password to confirm account deletion."
+                isLoading={isAuthLoading}
+            >
+                <div className="space-y-6 pt-4">
+                    <Input 
+                        label="Your Password"
+                        type="password"
+                        placeholder="Confirm password"
+                        value={deletePassword}
+                        onChange={(e) => setDeletePassword(e.target.value)}
+                        icon={<Lock size={18}/>}
+                    />
+                    <div className="flex flex-col gap-3">
+                        <Button 
+                            variant="danger" 
+                            className="w-full"
+                            onClick={handleDeleteAccount}
+                            disabled={!deletePassword && !user?.google_id}
+                        >
+                            I understand, delete my account
+                        </Button>
+                        <Button 
+                            variant="ghost" 
+                            className="w-full"
+                            onClick={() => setShowDeleteModal(false)}
+                        >
+                            Cancel
+                        </Button>
+                    </div>
+                </div>
+            </Modal>
         </div>
     );
 }

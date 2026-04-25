@@ -130,6 +130,50 @@ export const useAuthStore = create()(persist((set, get) => ({
         }
     },
 
+    changePassword: async (currentPassword, newPassword) => {
+        set({ isLoading: true });
+        try {
+            await apiClient.post('/change-password', { currentPassword, newPassword });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    requestEmailChange: async (newEmail) => {
+        set({ isLoading: true });
+        try {
+            await apiClient.post('/profile/request-email-change', { newEmail });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    verifyEmailChange: async (code) => {
+        set({ isLoading: true });
+        try {
+            const response = await apiClient.post('/profile/verify-email-change', { code });
+            const updatedEmail = response.data?.data?.email || response.data?.email;
+            if (updatedEmail) {
+                set(state => ({ user: { ...state.user, email: updatedEmail } }));
+            }
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    deleteAccount: async (password) => {
+        set({ isLoading: true });
+        try {
+            await apiClient.delete('/profile', { data: { password } });
+            // Logout after deletion
+            set({ user: null, isAuthenticated: false });
+            localStorage.removeItem('musclo-auth');
+            localStorage.removeItem('musclo-token');
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
     reset: () => set({ user: null, isAuthenticated: false }),
 }), {
     name: 'musclo-auth',
