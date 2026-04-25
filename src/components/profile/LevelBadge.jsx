@@ -16,11 +16,11 @@ return (<div className="flex flex-col items-center group relative">
                 <div className="bg-surface">
                     <div className="flex justify-between text-xs font-bold mb-1">
                         <span className="text-text-secondary">Progress</span>
-                        <span className="text-emerald">{progress.toFixed(1)}%</span>
+                        <span className="text-orange">{progress.toFixed(1)}%</span>
                     </div>
                     <div className="h-1.5 bg-divider/20 rounded-full overflow-hidden shadow-neu-inset">
                         {/* Progress width is percent-based so callers can pass normalized values directly. */}
-                        <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }} className="h-full bg-emerald"/>
+                        <motion.div initial={{ width: 0 }} animate={{ width: `${progress}%` }} className="h-full bg-orange"/>
                     </div>
                     <p className="text-[10px] text-text-muted mt-2 text-center leading-tight">
                         Based on lifetime volume

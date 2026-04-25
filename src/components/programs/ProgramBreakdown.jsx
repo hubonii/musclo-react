@@ -40,7 +40,7 @@ return (
         <div className="hidden lg:flex flex-col lg:col-span-4 sticky top-24 gap-6">
             <div className="bg-surface rounded-2xl p-6 shadow-neu">
                 <div className="flex items-center gap-3 mb-6">
-                    <Activity className="text-emerald" size={24}/>
+                    <Activity className="text-orange" size={24}/>
                     <h2 className="text-xl font-black text-text-primary tracking-tight">Program Breakdown</h2>
                 </div>
 
@@ -56,7 +56,7 @@ return (
                     <div className="bg-app p-4 rounded-2xl shadow-neu-inset col-span-2">
                         <p className="text-xs font-bold text-text-muted uppercase tracking-wider mb-1">Projected Volume</p>
                         <div className="flex items-center gap-2">
-                            <TrendingUp className="text-emerald" size={18}/>
+                            <TrendingUp className="text-orange" size={18}/>
                             <p className="text-xl font-bold text-text-primary">
                                 {totalVolume > 0 ? `${totalVolume.toLocaleString()} kg` : 'No Data'}
                             </p>
@@ -80,7 +80,7 @@ return (
                                 </div>
                                 <div className="w-full bg-app rounded-full h-2 shadow-neu-inset overflow-hidden">
                                     <div 
-                                        className="bg-emerald h-2 rounded-full shadow-[0_0_10px_rgba(var(--emerald-rgb),0.5)] transition-all duration-500" 
+                                        className="bg-orange h-2 rounded-full shadow-[0_0_10px_rgba(var(--orange-rgb),0.5)] transition-all duration-500" 
                                         style={{ width: `${item.percentage}%` }}
                                     ></div>
                                 </div>
