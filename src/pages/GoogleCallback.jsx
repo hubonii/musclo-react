@@ -6,35 +6,32 @@ export default function GoogleCallback() {
     const token = searchParams.get('token');
 
     useEffect(() => {
-        if (token && window.opener) {
-            // Talk to the parent window (they are now on the same domain!)
-            window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS', token }, window.location.origin);
-            // Close the popup after a split second
-            setTimeout(() => window.close(), 100);
-        } else if (!token) {
-            if (window.opener) {
-                window.opener.postMessage({ type: 'GOOGLE_AUTH_FAILURE' }, window.location.origin);
+        // Immediate execution
+        try {
+            if (token) {
+                if (window.opener) {
+                    window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS', token }, "*");
+                }
+            } else {
+                if (window.opener) {
+                    window.opener.postMessage({ type: 'GOOGLE_AUTH_FAILURE' }, "*");
+                }
             }
-            setTimeout(() => window.close(), 100);
+        } catch (err) {
+            console.error('Handshake failed:', err);
         }
+
+        // Close instantly
+        window.close();
+        
+        // Fallback for some browsers that block immediate close
+        const timer = setTimeout(() => {
+            window.close();
+        }, 500);
+
+        return () => clearTimeout(timer);
     }, [token]);
 
-    return (
-        <div style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'center', 
-            height: '100vh', 
-            flexDirection: 'column',
-            fontFamily: 'sans-serif',
-            background: '#f8fafc'
-        }}>
-            <div style={{ color: '#EA580C', fontWeight: 'bold', fontSize: '20px', marginBottom: '10px' }}>
-                Finishing Login...
-            </div>
-            <div style={{ color: '#64748b', fontSize: '14px' }}>
-                Sending you back to Musclo.tech
-            </div>
-        </div>
-    );
+    // Return null so nothing is displayed as requested
+    return null;
 }
