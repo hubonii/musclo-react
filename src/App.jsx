@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './router';
-import { ToastProvider } from './components/ui/Toast';
+import { ToastProvider, useToast } from './components/ui/Toast';
 import { TooltipProvider } from './components/ui/Tooltip';
 import { useAuthStore } from './stores/useAuthStore';
 import ErrorBoundary from './components/ui/ErrorBoundary';
