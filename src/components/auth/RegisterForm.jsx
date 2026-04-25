@@ -52,7 +52,8 @@ export default function RegisterForm() {
         );
         
         const handleMessage = (event) => {
-            // Basic origin check: message should come from our backend
+            // Strict same-origin check for security
+            if (event.origin !== window.location.origin) return;
             if (!event.data?.type || !event.data.type.startsWith('GOOGLE_AUTH_')) return;
 
             if (event.data?.type === 'GOOGLE_AUTH_SUCCESS') {

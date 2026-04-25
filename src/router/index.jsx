@@ -34,6 +34,7 @@ const SettingsPage = lazy(() => import('../pages/SettingsPage'));
 const ForgotPasswordPage = lazy(() => import('../pages/ForgotPasswordPage'));
 const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage'));
 const EmailVerificationPage = lazy(() => import('../pages/EmailVerificationPage'));
+const GoogleCallback = lazy(() => import('../pages/GoogleCallback'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 
 export const router = createBrowserRouter([
@@ -43,6 +44,7 @@ export const router = createBrowserRouter([
     { path: '/forgot-password', element: <Suspense fallback={<PageLoader />}><ForgotPasswordPage /></Suspense> },
     { path: '/reset-password', element: <Suspense fallback={<PageLoader />}><ResetPasswordPage /></Suspense> },
     { path: '/verify-email', element: <Suspense fallback={<PageLoader />}><EmailVerificationPage /></Suspense> },
+    { path: '/auth/callback', element: <Suspense fallback={<PageLoader />}><GoogleCallback /></Suspense> },
     {
         path: '/',
         element: (
