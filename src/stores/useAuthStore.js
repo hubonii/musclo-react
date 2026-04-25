@@ -1,7 +1,7 @@
 // Global auth store (session state + auth actions).
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { apiClient, apiGet, getCsrfCookie } from '../api/axios';
+import { apiClient, apiGet } from '../api/axios'; // Removed getCsrfCookie
 
 export const useAuthStore = create()(persist((set, get) => ({
     user: null,
@@ -13,9 +13,12 @@ export const useAuthStore = create()(persist((set, get) => ({
     login: async (email, password) => {
         set({ isAuthenticating: true });
         try {
-            await getCsrfCookie();
+            // Node.js does not need getCsrfCookie()
             const { data } = await apiClient.post('/login', { email, password });
-            set({ user: data.user, isAuthenticated: true });
+
+            // Adjusting to match Node.js response structure
+            const userData = data.user || data;
+            set({ user: userData, isAuthenticated: true });
         } finally {
             set({ isAuthenticating: false });
         }
@@ -24,9 +27,11 @@ export const useAuthStore = create()(persist((set, get) => ({
     register: async (name, email, password, password_confirmation) => {
         set({ isAuthenticating: true });
         try {
-            await getCsrfCookie();
+            // Node.js does not need getCsrfCookie()
             const { data } = await apiClient.post('/register', { name, email, password, password_confirmation });
-            set({ user: data.user, isAuthenticated: true });
+
+            const userData = data.user || data;
+            set({ user: userData, isAuthenticated: true });
         } finally {
             set({ isAuthenticating: false });
         }
@@ -34,12 +39,14 @@ export const useAuthStore = create()(persist((set, get) => ({
 
     logout: async () => {
         try {
-            await getCsrfCookie();
+            // Directly hit the logout endpoint
             await apiClient.post('/logout');
         } catch {
-            // Even if backend logout fails, clear local session state.
+            // Even if backend logout fails (e.g. session expired), clear local state
         }
         set({ user: null, isAuthenticated: false });
+        // Optional: clear local storage if persist doesn't clear fully
+        localStorage.removeItem('musclo-auth');
     },
 
     // Called on app startup to restore a valid server session.
@@ -48,8 +55,9 @@ export const useAuthStore = create()(persist((set, get) => ({
 
         set({ isInitializing: true });
         try {
+            //apiGet helper already handles the data extraction
             const user = await apiGet('/user');
-            set({ user, isAuthenticated: true });
+            set({ user, isAuthenticated: !!user });
         } catch {
             set({ user: null, isAuthenticated: false });
         } finally {
