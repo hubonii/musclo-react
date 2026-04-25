@@ -9,18 +9,18 @@ export default function AuthLayout({ children }) {
     return (
         <div className="min-h-screen flex flex-col md:flex-row bg-app">
             {/* Desktop-only marketing panel */}
-            <div className="hidden md:flex flex-1 flex-col justify-center pl-24 pr-12 bg-surface relative overflow-hidden text-center md:text-left">
+            <div className="hidden md:flex flex-1 flex-col justify-center pl-20 pr-16 bg-surface relative overflow-hidden text-center md:text-left">
                 <div className="relative z-10">
                     <img 
                         src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"} 
                         alt="MUSCLO" 
-                        className="h-20 lg:h-24 w-auto max-w-full object-contain mb-2 mx-auto md:mx-0"
+                        className="h-24 lg:h-28 w-auto max-w-full object-contain mb-3 mx-auto md:mx-0"
                     />
-                    <p className="text-2xl font-medium text-text-primary mb-4 leading-tight">
+                    <p className="text-3xl font-medium text-text-primary mb-5 leading-tight">
                         Track your progress.<br />
                         Break your limits.
                     </p>
-                    <p className="text-lg text-text-secondary max-w-sm">
+                    <p className="text-xl text-text-secondary max-w-sm">
                         AI-powered fitness logging built for those who take training seriously.
                     </p>
                 </div>
