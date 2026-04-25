@@ -1,12 +1,12 @@
 // Mobile bottom navigation shown on small screens.
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Dumbbell, Calendar, History, TrendingUp } from 'lucide-react';
+import { LayoutDashboard, Dumbbell, Calendar, History as HistoryIcon, TrendingUp } from 'lucide-react';
 import { cn } from '../../lib/utils';
 const NAV_ITEMS = [
     { icon: LayoutDashboard, label: 'Dash', path: '/dashboard' },
     { icon: Calendar, label: 'Programs', path: '/programs' },
     { icon: Dumbbell, label: 'Workout', path: '/workout', isPrimary: true },
-    { icon: History, label: 'History', path: '/history' },
+    { icon: HistoryIcon, label: 'History', path: '/history' },
     { icon: TrendingUp, label: 'Progress', path: '/progress' },
 ];
 // Renders mobile-only bottom tab navigation from `NAV_ITEMS` config.

@@ -1,7 +1,7 @@
 // Floating AI coach chat entry point and panel container.
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, X, Dumbbell, Square, User, Trash2, ArrowUpCircle, Image as ImageIcon, History, Plus, BrainCircuit, Activity, ChevronDown, Cpu } from 'lucide-react';
+import { Bot, X, Dumbbell, Square, User, Trash2, ArrowUpCircle, Image as ImageIcon, History as HistoryIcon, Plus, BrainCircuit, Activity, ChevronDown, Cpu } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useAIChatStore } from '../../stores/useAIChatStore';
@@ -234,7 +234,7 @@ export default function AIChatComponent() {
                                 <div className="flex items-center justify-between">
                                     <div className="flex items-center gap-4">
                                         <button onClick={() => setShowHistory(!showHistory)} className="p-3 bg-app shadow-neu-sm rounded-2xl transition-all text-text-muted hover:text-orange active:shadow-neu-inset">
-                                            <History size={20} />
+                                            <HistoryIcon size={20} />
                                         </button>
                                         <div>
                                             <h2 className="font-black text-text-primary text-sm tracking-tight uppercase">
