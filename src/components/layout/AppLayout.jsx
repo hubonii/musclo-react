@@ -17,10 +17,15 @@ return (<div className="flex h-[100dvh] w-full bg-app overflow-hidden">
             {!isFullscreenPage && <Sidebar />}
             <div className="flex flex-col flex-1 h-full min-w-0 relative">
                 {(!isFullscreenPage && !isWorkoutPage) && <TopBar />}
-                <main className={cn("flex-1 overflow-y-auto overflow-x-hidden", !isFullscreenPage && "md:pb-0 md:pr-16 lg:pr-24 xl:pr-32")}>
-                    <PageTransition>
-                        <Outlet />
-                    </PageTransition>
+                <main className="flex-1 overflow-y-auto overflow-x-hidden">
+                    <div className={cn(
+                        "w-full h-full",
+                        (!isFullscreenPage && !isWorkoutPage) && "md:pr-16 lg:pr-24 xl:pr-32"
+                    )}>
+                        <PageTransition>
+                            <Outlet />
+                        </PageTransition>
+                    </div>
                 </main>
                 {!isFullscreenPage && <BottomNav />}
             </div>

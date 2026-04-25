@@ -338,29 +338,31 @@ export default function WorkoutPage() {
     return (
         <div className="flex flex-col h-full bg-app">
             <WorkoutHeader elapsed={elapsed} totalVolume={totalVolume()} isImperial={isImperial} onCancel={() => setCancelModalOpen(true)} onFinish={() => setFinishModalOpen(true)}/>
+            
+            <div className="flex-1 overflow-y-auto w-full pt-4 md:pt-8 pb-32">
+                <div className="px-4 md:px-8 space-y-6 max-w-4xl mx-auto w-full">
+                    <AnimatePresence>
+                        {exercises?.map((exercise, eIdx) => (
+                            <ExerciseCard key={exercise.exerciseId} exercise={exercise} eIdx={eIdx} isImperial={isImperial} activeSetId={activeSetId} profileWeight={profileWeight} onUpdateExerciseConfig={handleUpdateExerciseConfig} onRemoveExercise={handleRemoveExercise} onAddSet={handleAddSet} onRemoveSet={handleRemoveSet} onUpdateSet={handleUpdateSet} onCompleteSet={handleCompleteSet}/>
+                        ))}
+                    </AnimatePresence>
 
-            <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 max-w-4xl mx-auto w-full pb-32">
-                <AnimatePresence>
-                    {exercises?.map((exercise, eIdx) => (
-                        <ExerciseCard key={exercise.exerciseId} exercise={exercise} eIdx={eIdx} isImperial={isImperial} activeSetId={activeSetId} profileWeight={profileWeight} onUpdateExerciseConfig={handleUpdateExerciseConfig} onRemoveExercise={handleRemoveExercise} onAddSet={handleAddSet} onRemoveSet={handleRemoveSet} onUpdateSet={handleUpdateSet} onCompleteSet={handleCompleteSet}/>
-                    ))}
-                </AnimatePresence>
+                    <motion.div>
+                        <Button variant="outline" className="w-full py-8 border-dashed border-2 hover:border-solid text-text-secondary hover:text-orange hover:border-orange bg-app/50 shadow-neu-inset" icon={<Plus size={20}/>} onClick={() => setIsPickerOpen(true)}>
+                            ADD EXERCISE
+                        </Button>
+                    </motion.div>
 
-                <motion.div>
-                    <Button variant="outline" className="w-full py-8 border-dashed border-2 hover:border-solid text-text-secondary hover:text-orange hover:border-orange bg-app/50 shadow-neu-inset" icon={<Plus size={20}/>} onClick={() => setIsPickerOpen(true)}>
-                        ADD EXERCISE
-                    </Button>
-                </motion.div>
-
-                <motion.div>
-                    <Card className="shadow-neu-sm">
-                        <div className="flex items-center gap-2 mb-4">
-                            <StickyNote size={18} className="text-orange"/>
-                            <h3 className="text-xs font-bold text-text-secondary uppercase">Workout Notes</h3>
-                        </div>
-                        <Textarea placeholder="How was your workout? Any notes on performance, feelings, or adjustments..." value={notes} onChange={handleSetNotes} className="min-h-[100px] bg-app shadow-neu-inset border-0 focus:ring-orange/20 text-sm font-medium"/>
-                    </Card>
-                </motion.div>
+                    <motion.div>
+                        <Card className="shadow-neu-sm">
+                            <div className="flex items-center gap-2 mb-4">
+                                <StickyNote size={18} className="text-orange"/>
+                                <h3 className="text-xs font-bold text-text-secondary uppercase">Workout Notes</h3>
+                            </div>
+                            <Textarea placeholder="How was your workout? Any notes on performance, feelings, or adjustments..." value={notes} onChange={handleSetNotes} className="min-h-[100px] bg-app shadow-neu-inset border-0 focus:ring-orange/20 text-sm font-medium"/>
+                        </Card>
+                    </motion.div>
+                </div>
             </div>
 
             <Modal open={isPickerOpen} onOpenChange={setIsPickerOpen} title="Add Exercise" description="Choose an exercise for this workout">
