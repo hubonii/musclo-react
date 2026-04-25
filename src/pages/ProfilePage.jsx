@@ -112,7 +112,7 @@ return (
                 {/* Achievement gallery */}
                 <Card>
                         <div className="flex items-center gap-3 border-b border-divider/10 pb-4 mb-6">
-                        <Trophy className="text-orange" size={22}/>
+                        <TrophyIcon className="text-orange" size={22}/>
                         <h2 className="font-black text-text-primary text-xl uppercase tracking-tighter">Achievements</h2>
                     </div>
                     {isLoadingAchievements ? (
@@ -122,7 +122,7 @@ return (
                     ) : (
                         <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-8 gap-4">
                             {(achievements || []).map((ach) => (
-                                <AchievementBadge key={ach.id} achievement={ach}/>
+                                <AchievementBadge key={ach.id} {...ach}/>
                             ))}
                             {(achievements || []).length === 0 && (
                                 <p className="col-span-full text-center text-[10px] font-black uppercase text-text-muted py-8 tracking-widest opacity-50">No achievements yet</p>
