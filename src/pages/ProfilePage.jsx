@@ -1,7 +1,7 @@
 // Profile page: user summary, achievements, and shared routine cards.
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User as UserIcon, Trophy as TrophyIcon, Share2, Dumbbell, CalendarDays, TrendingUp, Settings as SettingsIcon, Lock as LockIcon } from 'lucide-react';
+import { User as UserIcon, Trophy as TrophyIcon, Share2, Dumbbell, CalendarDays, TrendingUp, Settings as SettingsIcon, Lock as LockIcon, Camera } from 'lucide-react';
 import { useAuthStore } from '../stores/useAuthStore';
 import { useProfile, useAchievements, useSharedWorkouts } from '../hooks/useProfile';
 import { MOTION } from '../lib/motion';
@@ -11,13 +11,17 @@ import LevelBadge from '../components/profile/LevelBadge';
 import AchievementBadge from '../components/profile/AchievementBadge';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ChangePasswordModal from '../components/profile/ChangePasswordModal';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
+import { useToast } from '../components/ui/Toast';
 
 export default function ProfilePage() {
     const { id } = useParams();
     const navigate = useNavigate();
     const authUser = useAuthStore(s => s.user);
+    const { updateAvatar, isLoading: isUpdatingAvatar } = useAuthStore();
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
+    const { toast } = useToast();
+    const fileInputRef = useRef(null);
 
     // `me` maps to current user profile when route param is missing.
     const resolvedUserId = id || 'me';
@@ -29,6 +33,18 @@ export default function ProfilePage() {
 
     // Controls owner-only actions such as navigating to editable settings.
     const isOwnProfile = !id || (authUser?.id && parseInt(id, 10) === authUser.id);
+
+    const handleFileChange = async (e) => {
+        const file = e.target.files[0];
+        if (file) {
+            try {
+                await updateAvatar(file);
+                toast('success', 'Profile picture updated!');
+            } catch (err) {
+                toast('error', 'Upload failed', err.message);
+            }
+        }
+    };
 
     if (isLoadingProfile) {
         // Initial profile query loading state.
@@ -51,13 +67,39 @@ return (
                 <Card className="flex flex-col md:flex-row items-center md:items-start gap-6 relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-br from-emerald/20 to-transparent pointer-events-none"/>
 
-                    <div className="relative z-10">
+                    <div className="relative z-10 group">
                         {profile.avatar_url ? (
                             <img src={profile.avatar_url} alt={profile.name} className="w-28 h-28 rounded-full shadow-neu object-cover border-4 border-white" loading="lazy"/>
                         ) : (
                             <div className="w-28 h-28 rounded-full shadow-neu bg-app flex items-center justify-center border-4 border-divider">
                                 <UserIcon size={48} className="text-text-muted/50"/>
                             </div>
+                        )}
+                        
+                        {isOwnProfile && (
+                            <>
+                                <button 
+                                    onClick={() => fileInputRef.current?.click()}
+                                    disabled={isUpdatingAvatar}
+                                    className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer border-4 border-transparent"
+                                >
+                                    {isUpdatingAvatar ? (
+                                        <LoadingSpinner size="sm" color="white" />
+                                    ) : (
+                                        <>
+                                            <Camera size={24} />
+                                            <span className="text-[8px] font-black uppercase mt-1">Change</span>
+                                        </>
+                                    )}
+                                </button>
+                                <input 
+                                    type="file" 
+                                    ref={fileInputRef} 
+                                    className="hidden" 
+                                    accept="image/*"
+                                    onChange={handleFileChange}
+                                />
+                            </>
                         )}
                     </div>
 

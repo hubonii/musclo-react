@@ -98,10 +98,20 @@ export const useAuthStore = create()(persist((set, get) => ({
         }
     },
 
-    changePassword: async (currentPassword, newPassword) => {
+    updateAvatar: async (file) => {
         set({ isLoading: true });
         try {
-            await apiPost('/change-password', { currentPassword, newPassword });
+            const formData = new FormData();
+            formData.append('avatar', file);
+            const response = await apiClient.post('/profile/avatar', formData, {
+                headers: { 'Content-Type': 'multipart/form-data' }
+            });
+            // Support both data.avatar_url and direct response
+            const avatar_url = response.data?.data?.avatar_url || response.data?.avatar_url;
+            if (avatar_url) {
+                set(state => ({ user: { ...state.user, avatar_url } }));
+            }
+            return avatar_url;
         } finally {
             set({ isLoading: false });
         }

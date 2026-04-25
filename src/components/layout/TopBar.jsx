@@ -24,7 +24,7 @@ return (
                 <div className="absolute right-4 flex items-center gap-1">
                     <NavLink to="/profile" className="p-1">
                         {/* Fallback name prevents empty initials while auth state is hydrating. */}
-                        <Avatar name={user?.name || 'User'} size="sm"/>
+                        <Avatar name={user?.name || 'User'} src={user?.avatar_url} size="sm"/>
                     </NavLink>
                 </div>
             </div>

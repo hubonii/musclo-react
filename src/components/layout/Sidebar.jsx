@@ -65,7 +65,7 @@ return (
                     )}
                 >
                     {/* Avatar block reflects current auth user data from store state. */}
-                    <Avatar name={user?.name || 'User'} size="sm"/>
+                    <Avatar name={user?.name || 'User'} src={user?.avatar_url} size="sm"/>
                     <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-text-primary truncate">{user?.name}</p>
                         <p className="text-xs text-text-muted truncate">{user?.email}</p>
