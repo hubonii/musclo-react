@@ -1,5 +1,6 @@
+// Email verification component: handles manual trigger and code entry.
 import { useState } from 'react';
-import { Key, ArrowRight } from 'lucide-react';
+import { Key, Mail, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../../stores/useAuthStore';
 import Input from '../ui/Input';
@@ -7,54 +8,123 @@ import Button from '../ui/Button';
 import { useToast } from '../ui/Toast';
 
 export default function EmailVerification() {
+    const [step, setStep] = useState('request'); // 'request' or 'verify'
     const [code, setCode] = useState('');
-    const { verifyEmail, isLoading, user } = useAuthStore();
+    const { verifyEmail, resendVerification, isLoading, user, logout } = useAuthStore();
     const { toast } = useToast();
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const handleSendCode = async () => {
+        try {
+            await resendVerification();
+            setStep('verify');
+            toast('success', 'Code Sent!', `A 6-digit code has been sent to ${user?.email}`);
+        } catch (err) {
+            toast('error', 'Failed to send code', err?.response?.data?.message || 'Please try again.');
+        }
+    };
+
+    const handleSubmitCode = async (e) => {
         e.preventDefault();
         try {
             await verifyEmail(code);
-            toast('success', 'Verified!', 'Your email has been confirmed.');
-            navigate('/dashboard');
+            toast('success', 'Email Verified!', 'Your account is now fully active.');
+            navigate('/dashboard', { replace: true });
         } catch (err) {
             toast('error', 'Verification failed', err?.response?.data?.message || 'Invalid code.');
         }
     };
 
+    const handleLogout = async () => {
+        await logout();
+        navigate('/login');
+    };
+
     return (
-        <div className="w-full max-w-sm space-y-6">
-            <div className="space-y-2">
-                <h1 className="text-2xl font-black text-text-primary tracking-tighter uppercase">Verify Your Email</h1>
-                <p className="text-xs text-text-secondary font-bold uppercase tracking-widest opacity-60">
-                    We sent a code to <span className="text-orange">{user?.email}</span>
-                </p>
+        <div className="w-full max-w-sm space-y-8 py-4">
+            {/* Header Section */}
+            <div className="space-y-3 text-center">
+                <div className="mx-auto w-16 h-16 rounded-[24px] bg-surface shadow-neu flex items-center justify-center border border-orange/10">
+                    {step === 'request' ? (
+                        <Mail className="text-orange" size={28} />
+                    ) : (
+                        <ShieldCheck className="text-orange" size={28} />
+                    )}
+                </div>
+                <div className="space-y-1">
+                    <h1 className="text-2xl font-black text-text-primary tracking-tighter uppercase">
+                        {step === 'request' ? 'Verification Required' : 'Enter Code'}
+                    </h1>
+                    <p className="text-[10px] text-text-secondary font-black uppercase tracking-[0.2em] opacity-60">
+                        {step === 'request' 
+                            ? 'Please verify your email to access your account' 
+                            : `We sent a code to ${user?.email}`}
+                    </p>
+                </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <Input 
-                    label="Verification Code" 
-                    type="text" 
-                    value={code} 
-                    onChange={(e) => setCode(e.target.value)} 
-                    icon={<Key size={18}/>} 
-                    placeholder="123456" 
-                    maxLength={6}
-                    required
-                />
+            {/* Step 1: Request Code */}
+            {step === 'request' && (
+                <div className="space-y-6">
+                    <div className="p-4 rounded-2xl bg-surface/50 border border-white/5 space-y-2">
+                        <p className="text-xs text-text-secondary leading-relaxed font-medium">
+                            To ensure the security of your account, we need to verify your email address. 
+                            Click the button below to receive a 6-digit verification code.
+                        </p>
+                    </div>
 
-                <Button type="submit" variant="primary" className="w-full mt-4" isLoading={isLoading}>
-                    Confirm Email
-                </Button>
-            </form>
+                    <Button 
+                        variant="primary" 
+                        className="w-full h-14" 
+                        onClick={handleSendCode}
+                        isLoading={isLoading}
+                    >
+                        Send Verification Code
+                    </Button>
+                </div>
+            )}
 
-            <button 
-                onClick={() => navigate('/dashboard')} 
-                className="flex items-center gap-2 text-[10px] font-black text-text-muted uppercase tracking-[0.2em] hover:text-orange transition-all"
-            >
-                Skip for now <ArrowRight size={14}/>
-            </button>
+            {/* Step 2: Verify Code */}
+            {step === 'verify' && (
+                <form onSubmit={handleSubmitCode} className="space-y-6">
+                    <Input 
+                        label="6-Digit Code" 
+                        type="text" 
+                        value={code} 
+                        onChange={(e) => setCode(e.target.value)} 
+                        icon={<Key size={18}/>} 
+                        placeholder="123456" 
+                        maxLength={6}
+                        required
+                        className="text-center tracking-[0.5em] font-black text-lg"
+                    />
+
+                    <div className="space-y-4">
+                        <Button type="submit" variant="primary" className="w-full h-14" isLoading={isLoading}>
+                            Confirm Code
+                        </Button>
+                        
+                        <button 
+                            type="button"
+                            onClick={handleSendCode}
+                            className="w-full text-[10px] font-black text-text-muted uppercase tracking-[0.2em] hover:text-orange transition-all"
+                            disabled={isLoading}
+                        >
+                            Resend Email
+                        </button>
+                    </div>
+                </form>
+            )}
+
+            {/* Logout/Back Option */}
+            <div className="pt-4 border-t border-white/5 text-center">
+                <button 
+                    onClick={handleLogout}
+                    className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em] hover:text-red-400 transition-all"
+                >
+                    Sign out and use another account
+                </button>
+            </div>
         </div>
     );
 }
