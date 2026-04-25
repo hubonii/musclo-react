@@ -1,6 +1,6 @@
 // Login form: collects credentials and starts an authenticated session.
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
 import { useAuthStore } from '../../stores/useAuthStore';
 
@@ -31,7 +31,14 @@ const [password, setPassword] = useState('');
 return (<form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
             <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} icon={<Mail size={18}/>} placeholder="you@example.com" required/>
 
-            <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} icon={<Lock size={18}/>} placeholder="••••••••" required/>
+            <div className="space-y-1">
+                <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} icon={<Lock size={18}/>} placeholder="••••••••" required/>
+                <div className="flex justify-end">
+                    <Link to="/forgot-password" size="sm" className="text-[11px] font-black text-orange uppercase tracking-wider hover:opacity-70 transition-all">
+                        Forgot Password?
+                    </Link>
+                </div>
+            </div>
 
             <Button type="submit" variant="primary" className="w-full mt-6" isLoading={isAuthenticating}>
                 Sign In

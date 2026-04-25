@@ -28,8 +28,8 @@ const [validationError, setValidationError] = useState('');
         try {
 
             await register(name, email, password, passwordConfirm);
-            toast('success', 'Account created!', 'Welcome to Musclo.');
-            navigate('/dashboard', { replace: true });
+            toast('success', 'Account created!', 'Please check your email for a verification code.');
+            navigate('/verify-email', { replace: true });
         }
         catch (err) {
             // Error mapping order: field validation payload, response message, default message.

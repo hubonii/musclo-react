@@ -31,12 +31,17 @@ const ExercisesPage = lazy(() => import('../pages/ExercisesPage'));
 const ProfilePage = lazy(() => import('../pages/ProfilePage'));
 const ProgressPage = lazy(() => import('../pages/ProgressPage'));
 const SettingsPage = lazy(() => import('../pages/SettingsPage'));
+const ForgotPasswordPage = lazy(() => import('../pages/ForgotPasswordPage'));
+const ResetPasswordPage = lazy(() => import('../pages/ResetPasswordPage'));
+const EmailVerificationPage = lazy(() => import('../pages/EmailVerificationPage'));
 const NotFoundPage = lazy(() => import('../pages/NotFoundPage'));
 
 export const router = createBrowserRouter([
     // Public auth routes.
     { path: '/login', element: <Suspense fallback={<PageLoader />}><LoginPage /></Suspense> },
     { path: '/register', element: <Suspense fallback={<PageLoader />}><RegisterPage /></Suspense> },
+    { path: '/forgot-password', element: <Suspense fallback={<PageLoader />}><ForgotPasswordPage /></Suspense> },
+    { path: '/reset-password', element: <Suspense fallback={<PageLoader />}><ResetPasswordPage /></Suspense> },
     {
         path: '/',
         element: (
@@ -59,6 +64,7 @@ export const router = createBrowserRouter([
             { path: 'progress', element: <Suspense fallback={<PageLoader />}><ProgressPage /></Suspense> },
             { path: 'profile', element: <Suspense fallback={<PageLoader />}><ProfilePage /></Suspense> },
             { path: 'settings', element: <Suspense fallback={<PageLoader />}><SettingsPage /></Suspense> },
+            { path: 'verify-email', element: <Suspense fallback={<PageLoader />}><EmailVerificationPage /></Suspense> },
         ],
     },
     { path: '*', element: <Suspense fallback={<PageLoader />}><NotFoundPage /></Suspense> },

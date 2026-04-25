@@ -70,6 +70,45 @@ export const useAuthStore = create()(persist((set, get) => ({
         }
     },
 
+    verifyEmail: async (code) => {
+        set({ isLoading: true });
+        try {
+            await apiPost('/verify-email', { code });
+            // Refresh user data to get verified status
+            const user = await apiGet('/user');
+            set({ user });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    forgotPassword: async (email) => {
+        set({ isLoading: true });
+        try {
+            await apiPost('/forgot-password', { email });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    resetPassword: async (email, code, password) => {
+        set({ isLoading: true });
+        try {
+            await apiPost('/reset-password', { email, code, password });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
+    changePassword: async (currentPassword, newPassword) => {
+        set({ isLoading: true });
+        try {
+            await apiPost('/change-password', { currentPassword, newPassword });
+        } finally {
+            set({ isLoading: false });
+        }
+    },
+
     reset: () => set({ user: null, isAuthenticated: false }),
 }), {
     name: 'musclo-auth',

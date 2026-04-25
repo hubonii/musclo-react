@@ -10,11 +10,14 @@ import Button from '../components/ui/Button';
 import LevelBadge from '../components/profile/LevelBadge';
 import AchievementBadge from '../components/profile/AchievementBadge';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
+import ChangePasswordModal from '../components/profile/ChangePasswordModal';
+import { useState } from 'react';
 
 export default function ProfilePage() {
     const { id } = useParams();
     const navigate = useNavigate();
     const authUser = useAuthStore(s => s.user);
+    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
     // `me` maps to current user profile when route param is missing.
     const resolvedUserId = id || 'me';
@@ -69,9 +72,14 @@ return (
 
                     <div className="flex flex-col gap-3 relative z-10 w-full md:w-auto">
                         {isOwnProfile && (
-                            <Button variant="secondary" className="w-full flex items-center gap-2" onClick={() => navigate('/settings')}>
-                                <Settings size={18}/> Edit Profile
-                            </Button>
+                            <div className="flex flex-col gap-2 w-full md:w-auto">
+                                <Button variant="secondary" className="w-full flex items-center gap-2" onClick={() => navigate('/settings')}>
+                                    <Settings size={18}/> Edit Profile
+                                </Button>
+                                <Button variant="ghost" className="w-full flex items-center gap-2 text-[10px] font-black uppercase tracking-wider opacity-60 hover:opacity-100" onClick={() => setIsPasswordModalOpen(true)}>
+                                    <Lock size={14}/> Change Password
+                                </Button>
+                            </div>
                         )}
                     </div>
                 </Card>
@@ -162,6 +170,11 @@ return (
                 </Card>
 
             </motion.div>
+
+            <ChangePasswordModal 
+                isOpen={isPasswordModalOpen} 
+                onClose={() => setIsPasswordModalOpen(false)} 
+            />
         </div>
     );
 }
