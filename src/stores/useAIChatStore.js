@@ -10,7 +10,7 @@ export const useAIChatStore = create()((set, get) => ({
     isLoading: false,
     error: null,
     abortController: null,
-    selectedModel: 'google/gemma-4-31b-it:free',
+    selectedModel: 'openai/gpt-oss-120b:free',
     selectedImage: null,
     openChat: () => set({ isOpen: true }),
     closeChat: () => set({ isOpen: false }),
