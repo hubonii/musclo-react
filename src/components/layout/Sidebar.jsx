@@ -1,6 +1,6 @@
 // Desktop navigation sidebar for authenticated areas.
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Calendar, Dumbbell, History as HistoryIcon, Search, Moon, Sun, LogOut, User, TrendingUp } from 'lucide-react';
+import { LayoutDashboard, Calendar, Dumbbell, History as HistoryIcon, Search as SearchIcon, Moon, Sun, LogOut, User as UserIcon, TrendingUp as TrendingUpIcon } from 'lucide-react';
 import { cn } from '../../lib/utils';
 import { useAuthStore } from '../../stores/useAuthStore';
 import { useThemeStore } from '../../stores/useThemeStore';
@@ -12,9 +12,9 @@ const NAV_ITEMS = [
     { icon: Calendar, label: 'Programs', path: '/programs' },
     { icon: Dumbbell, label: 'Workout', path: '/workout' },
     { icon: HistoryIcon, label: 'History', path: '/history' },
-    { icon: Search, label: 'Exercises', path: '/exercises' },
-    { icon: TrendingUp, label: 'Progress', path: '/progress' },
-    { icon: User, label: 'Profile', path: '/profile' },
+    { icon: SearchIcon, label: 'Exercises', path: '/exercises' },
+    { icon: TrendingUpIcon, label: 'Progress', path: '/progress' },
+    { icon: UserIcon, label: 'Profile', path: '/profile' },
 ];
 
 // Static nav config drives icon/label/path rendering for primary desktop links.

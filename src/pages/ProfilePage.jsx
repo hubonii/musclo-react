@@ -1,7 +1,7 @@
 // Profile page: user summary, achievements, and shared routine cards.
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User, Trophy, Share2, Dumbbell, CalendarDays, TrendingUp, Settings } from 'lucide-react';
+import { User as UserIcon, Trophy as TrophyIcon, Share2, Dumbbell, CalendarDays, TrendingUp, Settings as SettingsIcon, Lock as LockIcon } from 'lucide-react';
 import { useAuthStore } from '../stores/useAuthStore';
 import { useProfile, useAchievements, useSharedWorkouts } from '../hooks/useProfile';
 import { MOTION } from '../lib/motion';
@@ -56,7 +56,7 @@ return (
                             <img src={profile.avatar_url} alt={profile.name} className="w-28 h-28 rounded-full shadow-neu object-cover border-4 border-white" loading="lazy"/>
                         ) : (
                             <div className="w-28 h-28 rounded-full shadow-neu bg-app flex items-center justify-center border-4 border-divider">
-                                <User size={48} className="text-text-muted/50"/>
+                                <UserIcon size={48} className="text-text-muted/50"/>
                             </div>
                         )}
                     </div>
@@ -74,10 +74,10 @@ return (
                         {isOwnProfile && (
                             <div className="flex flex-col gap-2 w-full md:w-auto">
                                 <Button variant="secondary" className="w-full flex items-center gap-2" onClick={() => navigate('/settings')}>
-                                    <Settings size={18}/> Edit Profile
+                                     <SettingsIcon size={16}/> Edit Profile
                                 </Button>
                                 <Button variant="ghost" className="w-full flex items-center gap-2 text-[10px] font-black uppercase tracking-wider opacity-60 hover:opacity-100" onClick={() => setIsPasswordModalOpen(true)}>
-                                    <Lock size={14}/> Change Password
+                                    <LockIcon size={14}/> Change Password
                                 </Button>
                             </div>
                         )}

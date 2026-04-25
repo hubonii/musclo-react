@@ -1,10 +1,9 @@
 // Achievement icon tile with unlocked/locked visual state.
 import { motion } from 'framer-motion';
-import { Lock } from 'lucide-react';
+import { Lock as LockIcon } from 'lucide-react';
 import * as Tooltip from '@radix-ui/react-tooltip';
 // Shows unlocked/locked achievement tile and tooltip metadata.
-export default function AchievementBadge({ achievement }) {
-    const { name, icon, description, unlocked, unlocked_at } = achievement;
+export default function AchievementBadge({ name, icon, description, unlocked, unlocked_at }) {
 return (<Tooltip.Root delayDuration={0}>
             <Tooltip.Trigger asChild>
                 <motion.div whileHover={{ scale: 1.05, y: -2 }} className={`
@@ -16,7 +15,7 @@ return (<Tooltip.Root delayDuration={0}>
                     </div>
                     {/* Lock marker appears only for locked achievements to keep unlocked tiles cleaner. */}
                     {!unlocked && (<div className="absolute top-2 right-2 text-text-muted/50">
-                            <Lock size={14}/>
+                            <LockIcon size={14}/>
                         </div>)}
                     <span className={`text-[10px] font-bold text-center leading-tight tracking-tight ${unlocked ? 'text-text-primary' : 'text-text-muted'}`}>
                         {name}

@@ -1,7 +1,7 @@
 // Registration form: validates basic fields and creates a new account.
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { User, Mail, Lock } from 'lucide-react';
+import { User as UserIcon, Mail, Lock as LockIcon } from 'lucide-react';
 import { useAuthStore } from '../../stores/useAuthStore';
 
 import Input from '../ui/Input';
@@ -40,18 +40,16 @@ const [validationError, setValidationError] = useState('');
         }
     };
 return (<form onSubmit={handleSubmit} className="w-full max-w-sm space-y-4">
-            <Input label="Name" type="text" value={name} onChange={(e) => setName(e.target.value)} icon={<User size={18}/>} placeholder="Jane Doe" required/>
+            <Input label="Name" type="text" value={name} onChange={(e) => setName(e.target.value)} icon={<UserIcon size={18}/>} placeholder="Jane Doe" required/>
 
             <Input label="Email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} icon={<Mail size={18}/>} placeholder="you@example.com" required/>
 
-            <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} icon={<Lock size={18}/>} placeholder="••••••••" required/>
+            <Input label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} icon={<LockIcon size={18}/>} placeholder="••••••••" required/>
 
-            <Input label="Confirm Password" type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} icon={<Lock size={18}/>} placeholder="••••••••" error={validationError} required/>
+            <Input label="Confirm Password" type="password" value={passwordConfirm} onChange={(e) => setPasswordConfirm(e.target.value)} icon={<LockIcon size={18}/>} placeholder="••••••••" error={validationError} required/>
 
             <Button type="submit" variant="primary" className="w-full pt-2 mt-6" isLoading={isAuthenticating}>
                 Sign Up
             </Button>
         </form>);
 }
-
-

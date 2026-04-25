@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Lock, X, ShieldCheck } from 'lucide-react';
+import { Lock as LockIcon, X, ShieldCheck } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAuthStore } from '../../stores/useAuthStore';
 import Input from '../ui/Input';
@@ -61,7 +61,7 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
                                     type="password" 
                                     value={currentPassword} 
                                     onChange={(e) => setCurrentPassword(e.target.value)} 
-                                    icon={<Lock size={18}/>} 
+                                    icon={<LockIcon size={18}/>} 
                                     placeholder="••••••••" 
                                     required
                                 />
@@ -71,7 +71,7 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
                                     type="password" 
                                     value={newPassword} 
                                     onChange={(e) => setNewPassword(e.target.value)} 
-                                    icon={<Lock size={18}/>} 
+                                    icon={<LockIcon size={18}/>} 
                                     placeholder="••••••••" 
                                     required
                                 />
@@ -81,7 +81,7 @@ export default function ChangePasswordModal({ isOpen, onClose }) {
                                     type="password" 
                                     value={confirmPassword} 
                                     onChange={(e) => setConfirmPassword(e.target.value)} 
-                                    icon={<Lock size={18}/>} 
+                                    icon={<LockIcon size={18}/>} 
                                     placeholder="••••••••" 
                                     required
                                 />

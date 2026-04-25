@@ -1,7 +1,7 @@
 // Workout history page with month grouping and workout detail modal access.
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Clock, Target, ChevronRight, Activity } from 'lucide-react';
+import { Clock, Target, ChevronRight, Activity as ActivityIcon } from 'lucide-react';
 import { apiClient } from '../api/axios';
 import { useToast } from '../components/ui/Toast';
 import { useSettings } from '../hooks/useSettings';
@@ -56,7 +56,7 @@ return (
             {loading ? (
                 <LoadingSpinner size="lg" message="Loading history..." className="min-h-[400px] py-12" />
             ) : workouts.length === 0 ? (
-                <EmptyState icon={<Activity size={48}/>} title="No history yet" description="Complete your first workout to start building your history log."/>
+                <EmptyState icon={<ActivityIcon size={48}/>} title="No history yet" description="Complete your first workout to start building your history log."/>
             ) : (
                 <div className="space-y-8">
                     {/* Render one month section containing workout cards for that month. */}

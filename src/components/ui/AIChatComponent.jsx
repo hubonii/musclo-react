@@ -1,7 +1,7 @@
 // Floating AI coach chat entry point and panel container.
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Bot, X, Dumbbell, Square, User, Trash2, ArrowUpCircle, Image as ImageIcon, History as HistoryIcon, Plus, BrainCircuit, Activity, ChevronDown, Cpu } from 'lucide-react';
+import { Bot, X, Dumbbell, Square, User as UserIcon, Trash2, ArrowUpCircle, Image as ImageIcon, History as HistoryIcon, Plus, BrainCircuit, Activity as ActivityIcon, ChevronDown as ChevronDownIcon, Cpu as CpuIcon } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useAIChatStore } from '../../stores/useAIChatStore';
@@ -261,9 +261,9 @@ export default function AIChatComponent() {
                                         onClick={() => setShowModelPicker(!showModelPicker)}
                                         className="w-full flex items-center gap-2.5 px-4 py-2.5 bg-app shadow-neu-inset rounded-2xl text-left transition-all hover:shadow-neu-sm group border border-divider/10"
                                     >
-                                        <Cpu size={14} className="text-orange flex-shrink-0" />
+                                        <CpuIcon size={14} className="text-orange flex-shrink-0" />
                                         <span className="text-[11px] font-black text-text-secondary uppercase tracking-wider truncate flex-1">{currentModelLabel}</span>
-                                        <ChevronDown size={14} className={cn("text-text-muted transition-transform", showModelPicker && "rotate-180")} />
+                                        <ChevronDownIcon size={14} className={cn("text-text-muted transition-transform", showModelPicker && "rotate-180")} />
                                     </button>
                                     <AnimatePresence>
                                         {showModelPicker && (

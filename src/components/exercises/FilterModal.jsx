@@ -1,18 +1,18 @@
 // Advanced filter modal for exercises (equipment + body part).
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Dumbbell, User, Weight, Link, Waves, Circle, Settings, Shield, Activity, Hexagon, Target, Component, Box } from 'lucide-react';
+import { X, Dumbbell, User as UserIcon, Weight, Link as LinkIcon, Waves, Circle, Settings as SettingsIcon, Shield, Activity as ActivityIcon, Hexagon, Target, Component as ComponentIcon, Box } from 'lucide-react';
 import { apiClient } from '../../api/axios';
 import { cn } from '../../lib/utils';
 
 const getEqIcon = (n) => {
     const l = n.toLowerCase();
-    if (l.includes('body')) return User;
+    if (l.includes('body')) return UserIcon;
     if (l.includes('dumb') || l.includes('barbell')) return Dumbbell;
     if (l.includes('band') || l.includes('rope')) return Waves;
-    if (l.includes('cable')) return Link;
+    if (l.includes('cable')) return LinkIcon;
     if (l.includes('weighted') || l.includes('kettle')) return Weight;
-    if (l.includes('machine') || l.includes('smith')) return Settings;
+    if (l.includes('machine') || l.includes('smith')) return SettingsIcon;
     if (l.includes('ball') || l.includes('roll')) return Circle;
     if (l.includes('trap')) return Hexagon;
     return Box;
@@ -21,8 +21,8 @@ const getEqIcon = (n) => {
 const getBpIcon = (n) => {
     const l = n.toLowerCase();
     if (l.includes('chest')) return Shield;
-    if (l.includes('back')) return Component;
-    if (l.includes('leg') || l.includes('calf') || l.includes('thigh')) return Activity;
+    if (l.includes('back')) return ComponentIcon;
+    if (l.includes('leg') || l.includes('calf') || l.includes('thigh')) return ActivityIcon;
     if (l.includes('arm') || l.includes('bicep') || l.includes('tricep')) return Dumbbell;
     if (l.includes('shoulder')) return Target;
     if (l.includes('abs') || l.includes('core')) return Box;

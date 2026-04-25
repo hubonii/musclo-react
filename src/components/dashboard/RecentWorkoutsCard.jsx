@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Activity, Dumbbell } from 'lucide-react';
+import { Activity as ActivityIcon, Dumbbell } from 'lucide-react';
 import Card from '../ui/Card';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import WorkoutDetailModal from '../history/WorkoutDetailModal';
@@ -26,7 +26,7 @@ export default function RecentWorkoutsCard({ workouts, loading }) {
             <Card className="flex flex-col min-h-[350px]">
                 <div className="flex items-center justify-between mb-6">
                     <h3 className="text-base font-black text-text-primary flex items-center gap-2 uppercase tracking-tight">
-                        <Activity size={20} className="text-orange"/>
+                        <ActivityIcon size={20} className="text-orange"/>
                         Recent Logs
                     </h3>
                     <button 
@@ -46,7 +46,7 @@ export default function RecentWorkoutsCard({ workouts, loading }) {
                         >
                             <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 rounded-xl bg-surface shadow-neu-sm flex items-center justify-center text-orange shrink-0 group-hover:shadow-neu-orange transition-shadow">
-                                    <Activity size={24}/>
+                                    <ActivityIcon size={24}/>
                                 </div>
                                 <div>
                                     <h4 className="font-black text-text-primary text-sm uppercase leading-tight tracking-tight">

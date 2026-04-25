@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { Key, Lock, Mail } from 'lucide-react';
+import { Key, Lock as LockIcon, Mail } from 'lucide-react';
 import { useAuthStore } from '../../stores/useAuthStore';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
@@ -64,7 +64,7 @@ export default function ResetPassword() {
                     type="password" 
                     value={password} 
                     onChange={(e) => setPassword(e.target.value)} 
-                    icon={<Lock size={18}/>} 
+                    icon={<LockIcon size={18}/>} 
                     placeholder="••••••••" 
                     required
                 />
