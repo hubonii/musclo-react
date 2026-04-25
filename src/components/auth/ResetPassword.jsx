@@ -74,7 +74,7 @@ export default function ResetPassword() {
                     type="password" 
                     value={passwordConfirm} 
                     onChange={(e) => setPasswordConfirm(e.target.value)} 
-                    icon={<Lock size={18}/>} 
+                    icon={<LockIcon size={18}/>} 
                     placeholder="••••••••" 
                     required
                 />
