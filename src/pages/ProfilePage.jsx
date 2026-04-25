@@ -1,7 +1,7 @@
 // Profile page: user summary, achievements, and shared routine cards.
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { User as UserIcon, Trophy as TrophyIcon, Share2, Dumbbell, CalendarDays, TrendingUp, Settings as SettingsIcon, Lock as LockIcon, Camera } from 'lucide-react';
+import { User as UserIcon, Trophy as TrophyIcon, Share2, Dumbbell, CalendarDays, TrendingUp, Settings as SettingsIcon, Lock as LockIcon, Camera, Sun, Moon, LogOut } from 'lucide-react';
 import { useAuthStore } from '../stores/useAuthStore';
 import { useProfile, useAchievements, useSharedWorkouts } from '../hooks/useProfile';
 import { MOTION } from '../lib/motion';
@@ -14,12 +14,15 @@ import Avatar from '../components/ui/Avatar';
 // ChangePasswordModal removed - now integrated in settings
 import { useState, useRef } from 'react';
 import { useToast } from '../components/ui/Toast';
+import { useThemeStore } from '../stores/useThemeStore';
 
 export default function ProfilePage() {
     const { id } = useParams();
     const navigate = useNavigate();
     const authUser = useAuthStore(s => s.user);
+    const logout = useAuthStore(s => s.logout);
     const { toast } = useToast();
+    const { theme, toggleTheme } = useThemeStore();
 
     // `me` maps to current user profile when route param is missing.
     const resolvedUserId = id || 'me';
@@ -49,7 +52,25 @@ return (
 
 return (
         <div className="p-4 md:p-8 max-w-5xl mx-auto pb-32">
-            <motion.div {...MOTION.pageEnter} className="space-y-8">
+            <motion.div {...MOTION.pageEnter} className="space-y-6 md:space-y-8">
+                
+                {/* Mobile Quick Actions (Theme & Logout) */}
+                {isOwnProfile && (
+                    <div className="flex justify-end gap-2 md:hidden">
+                        <button 
+                            onClick={toggleTheme} 
+                            className="p-3 bg-surface shadow-neu rounded-2xl text-text-secondary active:scale-95 transition-transform"
+                        >
+                            {theme === 'dark' ? <Sun size={20}/> : <Moon size={20}/>}
+                        </button>
+                        <button 
+                            onClick={logout} 
+                            className="p-3 bg-surface shadow-neu rounded-2xl text-danger/80 active:scale-95 transition-transform"
+                        >
+                            <LogOut size={20}/>
+                        </button>
+                    </div>
+                )}
                 {/* Hero card with avatar, bio, level, and profile actions. */}
                 <Card className="flex flex-col md:flex-row items-center md:items-start gap-6 relative overflow-hidden">
                     <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-br from-emerald/20 to-transparent pointer-events-none"/>

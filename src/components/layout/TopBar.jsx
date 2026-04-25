@@ -21,25 +21,8 @@ return (
                     {/* Swap logo asset to preserve contrast across light/dark themes. */}
                     <img src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"} alt="MUSCLO" className="h-8 w-auto object-contain"/>
                 </NavLink>
-                <div className="absolute right-4 flex items-center gap-1 sm:gap-2">
-                    <button 
-                        onClick={toggleTheme}
-                        className="p-2 text-text-secondary hover:text-text-primary transition-colors"
-                        aria-label="Toggle Theme"
-                    >
-                        {theme === 'dark' ? <Sun size={20}/> : <Moon size={20}/>}
-                    </button>
-                    
-                    <button 
-                        onClick={logout}
-                        className="p-2 text-danger opacity-70 hover:opacity-100 transition-opacity"
-                        aria-label="Logout"
-                    >
-                        <LogOut size={20}/>
-                    </button>
-
+                <div className="absolute right-4 flex items-center">
                     <NavLink to="/profile" className="p-1">
-                        {/* Fallback name prevents empty initials while auth state is hydrating. */}
                         <Avatar name={user?.name || 'User'} src={user?.avatar_url} size="sm"/>
                     </NavLink>
                 </div>
