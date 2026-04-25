@@ -42,9 +42,12 @@ export function getPendingCount() {
  */
 export async function flushQueue() {
   const pending = getPendingWorkouts();
-  if (pending.length === 0) return 0;
+  if (pending.length === 0) return { synced: 0, error: null };
 
+  let synced = 0;
+  const remaining = [];
   let firstError = null;
+
   for (const item of pending) {
     try {
       await apiPost('/workouts', item.payload);

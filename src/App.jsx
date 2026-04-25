@@ -30,13 +30,19 @@ function OfflineBanner() {
     const handleOnline = async () => {
         setIsOnline(true);
         const count = getPendingCount();
-        if (count > 0) {
+        if (count > 0 && !syncing) {
             setSyncing(true);
-            const { synced, error } = await flushQueue();
-            setPendingCount(getPendingCount());
-            setSyncing(false);
-            if (synced > 0) toast('success', `Synced ${synced} workout(s)`);
-            if (error) toast('error', `Sync failed: ${error}`);
+            try {
+                const { synced, error } = await flushQueue();
+                setPendingCount(getPendingCount());
+                if (synced > 0) toast('success', `Synced ${synced} workout(s)`);
+                if (error) toast('error', `Sync failed: ${error}`);
+            } catch (err) {
+                console.error('[OfflineSync] Flush failed:', err);
+                toast('error', 'Sync process failed unexpectedly');
+            } finally {
+                setSyncing(false);
+            }
         }
     };
 
