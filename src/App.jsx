@@ -89,6 +89,18 @@ function OfflineBanner() {
 
 function App() {
     useEffect(() => {
+        // Handle Google OAuth callback token from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        if (token) {
+            // Store token and clean URL
+            localStorage.setItem('musclo-token', token);
+            // Clean up the URL to remove the sensitive token
+            window.history.replaceState({}, document.title, window.location.pathname);
+            // Fetch user data to populate the store
+            useAuthStore.getState().fetchUser();
+        }
+
         const publicPages = ['/login', '/register', '/forgot-password', '/reset-password', '/verify-email'];
 
         // Restore auth state for protected pages after reload.
