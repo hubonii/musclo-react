@@ -1,7 +1,7 @@
 // Global auth store (session state + auth actions).
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import { apiClient, apiGet } from '../api/axios'; // Removed getCsrfCookie
+import { apiClient, apiGet, apiPost } from '../api/axios';
 
 export const useAuthStore = create()(persist((set, get) => ({
     user: null,
@@ -14,11 +14,11 @@ export const useAuthStore = create()(persist((set, get) => ({
         set({ isAuthenticating: true });
         try {
             // Node.js does not need getCsrfCookie()
-            const { data } = await apiClient.post('/login', { email, password });
+            const responseData = await apiPost('/login', { email, password });
 
             // Adjusting to match Node.js response structure
-            const userData = data.user || data;
-            const token = data.token;
+            const userData = responseData.user || responseData;
+            const token = responseData.token;
             if (token) localStorage.setItem('musclo-token', token);
             set({ user: userData, isAuthenticated: true });
         } finally {
@@ -30,10 +30,10 @@ export const useAuthStore = create()(persist((set, get) => ({
         set({ isAuthenticating: true });
         try {
             // Node.js does not need getCsrfCookie()
-            const { data } = await apiClient.post('/register', { name, email, password, password_confirmation });
+            const responseData = await apiPost('/register', { name, email, password, password_confirmation });
 
-            const userData = data.user || data;
-            const token = data.token;
+            const userData = responseData.user || responseData;
+            const token = responseData.token;
             if (token) localStorage.setItem('musclo-token', token);
             set({ user: userData, isAuthenticated: true });
         } finally {
