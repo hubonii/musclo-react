@@ -2,11 +2,12 @@ import axios from 'axios';
 import { useAuthStore } from '../stores/useAuthStore';
 
 // Ensure the URL in Vercel starts with https://
-export const API_URL = import.meta.env.VITE_API_URL;
+export const API_URL = import.meta.env.VITE_API_URL || 'https://musclo-nodejs-production.up.railway.app';
 
 export const apiClient = axios.create({
     baseURL: `${API_URL}/api`,
     withCredentials: true, // Required for sending/receiving cookies/sessions
+    timeout: 15000,
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
