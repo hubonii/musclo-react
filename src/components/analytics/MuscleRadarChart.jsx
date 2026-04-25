@@ -48,7 +48,7 @@ export default function MuscleRadarChart({
         outerRadius: "70%",
         data: chartData,
         children: [_jsx(PolarGrid, {
-          stroke: "var(--divider)",
+          stroke: "var(--border-divider)",
           strokeOpacity: 0.5
         }), _jsx(PolarAngleAxis, {
           dataKey: "muscle",
@@ -62,18 +62,18 @@ export default function MuscleRadarChart({
           domain: [0, 'auto'],
           tick: false,
           axisLine: false,
-          stroke: "var(--divider)",
+          stroke: "var(--border-divider)",
           strokeOpacity: 0.2
         }), _jsx(Radar, {
           name: "Volume Focus",
           dataKey: "volume",
-          stroke: "var(--tertiary)",
+          stroke: "var(--accent-orange)",
           strokeWidth: 2,
-          fill: "var(--tertiary)",
+          fill: "var(--accent-orange)",
           fillOpacity: 0.3
         }), _jsx(RechartsTooltip, {
           contentStyle: {
-            backgroundColor: 'var(--surface)',
+            backgroundColor: 'var(--bg-surface)',
             borderRadius: '16px',
             border: 'none',
             boxShadow: '0 10px 25px rgba(0,0,0,0.1)',
