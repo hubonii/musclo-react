@@ -88,55 +88,58 @@ function OfflineBanner() {
     );
 }
 
-const user = useAuthStore(s => s.user);
-const isAuthenticated = useAuthStore(s => s.isAuthenticated);
+function App() {
+    const user = useAuthStore(s => s.user);
+    const isAuthenticated = useAuthStore(s => s.isAuthenticated);
 
-// Total Memory Wipe on Logout: Ensures no data from User A stays in cache for User B.
-useEffect(() => {
-    if (!isAuthenticated) {
-        console.log('[Auth] Clearing global query cache...');
-        queryClient.clear();
-    }
-}, [isAuthenticated]);
+    // Total Memory Wipe on Logout: Ensures no data from User A stays in cache for User B.
+    useEffect(() => {
+        if (!isAuthenticated) {
+            console.log('[Auth] Clearing global query cache...');
+            queryClient.clear();
+        }
+    }, [isAuthenticated]);
 
-useEffect(() => {
-    // Handle Google OAuth callback token from URL
-    const urlParams = new URLSearchParams(window.location.search);
-    const token = urlParams.get('token');
-    if (token) {
-        // Store token and clean URL
-        localStorage.setItem('musclo-token', token);
-        // Clean up the URL to remove the sensitive token
-        window.history.replaceState({}, document.title, window.location.pathname);
-        // Fetch user data to populate the store
-        useAuthStore.getState().fetchUser();
-    }
+    useEffect(() => {
+        // Handle Google OAuth callback token from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const token = urlParams.get('token');
+        if (token) {
+            // Store token and clean URL
+            localStorage.setItem('musclo-token', token);
+            // Clean up the URL to remove the sensitive token
+            window.history.replaceState({}, document.title, window.location.pathname);
+            // Fetch user data to populate the store
+            useAuthStore.getState().fetchUser();
+        }
 
-    const publicPages = ['/login', '/register', '/forgot-password', '/reset-password', '/verify-email'];
+        const publicPages = ['/login', '/register', '/forgot-password', '/reset-password', '/verify-email'];
 
-    // Restore auth state for protected pages after reload.
-    if (!publicPages.includes(window.location.pathname)) {
-        useAuthStore.getState().fetchUser();
-    }
-}, []);
+        // Restore auth state for protected pages after reload.
+        if (!publicPages.includes(window.location.pathname)) {
+            useAuthStore.getState().fetchUser();
+        }
+    }, []);
 
-// Initialize offline workout sync listeners - specifically for the current user.
-useEffect(() => {
-    if (user?.id) {
-        const cleanup = initOfflineSync(user.id);
-        return cleanup;
-    }
-}, [user?.id]);
-return (<QueryClientProvider client={queryClient}>
-    <TooltipProvider>
+    // Initialize offline workout sync listeners - specifically for the current user.
+    useEffect(() => {
+        if (user?.id) {
+            const cleanup = initOfflineSync(user.id);
+            return cleanup;
+        }
+    }, [user?.id]);
+
+    return (<QueryClientProvider client={queryClient}>
+      <TooltipProvider>
         <ToastProvider>
-            <ErrorBoundary>
-                <OfflineBanner />
-                <RouterProvider router={router} />
-                <Analytics />
-            </ErrorBoundary>
+          <ErrorBoundary>
+            <OfflineBanner />
+            <RouterProvider router={router}/>
+            <Analytics />
+          </ErrorBoundary>
         </ToastProvider>
-    </TooltipProvider>
-</QueryClientProvider>);
+      </TooltipProvider>
+    </QueryClientProvider>);
+}
 
 export default App;
