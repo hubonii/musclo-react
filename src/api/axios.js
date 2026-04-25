@@ -7,7 +7,7 @@ export const API_URL = import.meta.env.VITE_API_URL || 'https://musclo-nodejs-pr
 export const apiClient = axios.create({
     baseURL: `${API_URL}/api`,
     withCredentials: true, // Required for sending/receiving cookies/sessions
-    timeout: 15000,
+    timeout: 60000,
     headers: {
         Accept: 'application/json',
         'Content-Type': 'application/json',
