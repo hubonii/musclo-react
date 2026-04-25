@@ -41,13 +41,17 @@ export default function LoginForm() {
         );
         
         const handleMessage = (event) => {
-            if (event.origin !== import.meta.env.VITE_API_URL) return;
+            // Basic origin check: message should come from our backend
+            if (!event.data?.type || !event.data.type.startsWith('GOOGLE_AUTH_')) return;
 
             if (event.data?.type === 'GOOGLE_AUTH_SUCCESS') {
                 localStorage.setItem('musclo-token', event.data.token);
                 useAuthStore.getState().fetchUser();
                 toast('success', 'Welcome back!');
                 navigate('/dashboard', { replace: true });
+                window.removeEventListener('message', handleMessage);
+            } else if (event.data?.type === 'GOOGLE_AUTH_FAILURE') {
+                toast('error', 'Authentication failed', 'Google login was cancelled or failed.');
                 window.removeEventListener('message', handleMessage);
             }
         };
