@@ -10,6 +10,7 @@ export default function GoogleCallback() {
         try {
             if (token) {
                 if (window.opener) {
+                    console.log('Bridge: Sending success to parent...');
                     window.opener.postMessage({ type: 'GOOGLE_AUTH_SUCCESS', token }, "*");
                 }
             } else {
@@ -21,13 +22,10 @@ export default function GoogleCallback() {
             console.error('Handshake failed:', err);
         }
 
-        // Close instantly
-        window.close();
-        
-        // Fallback for some browsers that block immediate close
+        // Wait just 100ms to ensure message dispatch
         const timer = setTimeout(() => {
             window.close();
-        }, 500);
+        }, 100);
 
         return () => clearTimeout(timer);
     }, [token]);

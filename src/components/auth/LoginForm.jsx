@@ -41,8 +41,13 @@ export default function LoginForm() {
         );
         
         const handleMessage = (event) => {
-            // Strict same-origin check for security
-            if (event.origin !== window.location.origin) return;
+            console.log('Parent: Received message from', event.origin, event.data);
+            
+            // Validate that the message is actually for us and same-origin
+            if (event.origin !== window.location.origin) {
+                console.warn('Parent: Message ignored due to origin mismatch');
+                return;
+            }
             if (!event.data?.type || !event.data.type.startsWith('GOOGLE_AUTH_')) return;
 
             if (event.data?.type === 'GOOGLE_AUTH_SUCCESS') {
