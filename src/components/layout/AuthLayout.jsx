@@ -10,7 +10,7 @@ export default function AuthLayout({ children }) {
         <div className="min-h-screen flex flex-col md:flex-row bg-app">
             {/* Desktop-only marketing panel */}
             <div className="hidden md:flex flex-1 flex-col justify-center px-16 bg-surface relative overflow-hidden text-center md:text-left">
-                <div className="relative z-10">
+                <div className="relative z-10 max-w-sm ml-auto mr-0">
                     <img 
                         src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"} 
                         alt="MUSCLO" 
