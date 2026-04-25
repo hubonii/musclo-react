@@ -25,19 +25,22 @@ function OfflineBanner() {
     const [isOnline, setIsOnline] = useState(navigator.onLine);
     const [pendingCount, setPendingCount] = useState(getPendingCount());
     const [syncing, setSyncing] = useState(false);
+    const { toast } = useToast();
+
+    const handleOnline = async () => {
+        setIsOnline(true);
+        const count = getPendingCount();
+        if (count > 0) {
+            setSyncing(true);
+            const { synced, error } = await flushQueue();
+            setPendingCount(getPendingCount());
+            setSyncing(false);
+            if (synced > 0) toast('success', `Synced ${synced} workout(s)`);
+            if (error) toast('error', `Sync failed: ${error}`);
+        }
+    };
 
     useEffect(() => {
-        const handleOnline = async () => {
-            setIsOnline(true);
-            // Auto-flush queued workouts when connectivity returns.
-            const count = getPendingCount();
-            if (count > 0) {
-                setSyncing(true);
-                await flushQueue();
-                setPendingCount(getPendingCount());
-                setSyncing(false);
-            }
-        };
         const handleOffline = () => {
             setIsOnline(false);
             setPendingCount(getPendingCount());
@@ -60,8 +63,10 @@ function OfflineBanner() {
     if (isOnline && pendingCount === 0) return null;
 
     return (
-        <div className="fixed top-0 left-0 right-0 z-[200] flex items-center justify-center gap-2 px-4 py-2.5 text-center transition-all"
+        <div 
+            className="fixed top-0 left-0 right-0 z-[200] flex items-center justify-center gap-2 px-4 py-2.5 text-center transition-all cursor-pointer hover:brightness-110 active:brightness-90"
             style={{ background: isOnline ? 'rgba(234, 88, 12, 0.95)' : 'rgba(245, 158, 11, 0.95)' }}
+            onClick={() => isOnline && pendingCount > 0 && !syncing && handleOnline()}
         >
             {!isOnline && <WifiOff size={14} className="text-white flex-shrink-0" />}
             <span className="text-[10px] font-black uppercase tracking-[0.15em] text-white">
@@ -69,7 +74,7 @@ function OfflineBanner() {
                     ? 'Syncing pending workouts...'
                     : !isOnline
                         ? `You're offline — data is cached${pendingCount > 0 ? ` • ${pendingCount} workout${pendingCount > 1 ? 's' : ''} pending` : ''}`
-                        : `${pendingCount} workout${pendingCount > 1 ? 's' : ''} pending sync`
+                        : `${pendingCount} workout${pendingCount > 1 ? 's' : ''} pending sync — click to retry`
                 }
             </span>
         </div>

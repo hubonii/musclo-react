@@ -44,21 +44,21 @@ export async function flushQueue() {
   const pending = getPendingWorkouts();
   if (pending.length === 0) return 0;
 
-  let synced = 0;
-  const remaining = [];
-
+  let firstError = null;
   for (const item of pending) {
     try {
       await apiPost('/workouts', item.payload);
       synced++;
     } catch (err) {
+      console.error('[OfflineSync] Failed to sync workout:', err.response?.data || err.message);
+      if (!firstError) firstError = err.response?.data?.message || err.message;
       // Keep failed items in queue for next attempt.
       remaining.push(item);
     }
   }
 
   localStorage.setItem(QUEUE_KEY, JSON.stringify(remaining));
-  return synced;
+  return { synced, error: firstError };
 }
 
 /**
@@ -67,7 +67,7 @@ export async function flushQueue() {
  */
 export function initOfflineSync() {
   const handleOnline = async () => {
-    const synced = await flushQueue();
+    const { synced } = await flushQueue();
     if (synced > 0) {
       console.log(`[OfflineSync] Synced ${synced} pending workout(s).`);
     }
