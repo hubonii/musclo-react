@@ -33,6 +33,13 @@ apiClient.interceptors.response.use(
             }
         }
 
+        if (error.response?.status === 403 && error.response?.data?.needs_verification) {
+            // Redirect to verification page if email is not confirmed
+            if (window.location.pathname !== '/verify-email') {
+                window.location.href = '/verify-email';
+            }
+        }
+
         // REMOVED: 419 handler and getCsrfCookie (Laravel specific)
 
         if (error.response && error.response.status >= 500) {
