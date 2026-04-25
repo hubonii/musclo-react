@@ -55,14 +55,31 @@ export default function LoginForm() {
                 useAuthStore.getState().fetchUser();
                 toast('success', 'Welcome back!');
                 navigate('/dashboard', { replace: true });
-                window.removeEventListener('message', handleMessage);
+                cleanup();
             } else if (event.data?.type === 'GOOGLE_AUTH_FAILURE') {
                 toast('error', 'Authentication failed', 'Google login was cancelled or failed.');
-                window.removeEventListener('message', handleMessage);
+                cleanup();
             }
+        };
+
+        // Storage fallback for cases where opener link is lost
+        const handleStorageChange = (event) => {
+            if (event.key === 'musclo-token' && event.newValue) {
+                console.log('Parent: Token detected in storage');
+                useAuthStore.getState().fetchUser();
+                toast('success', 'Welcome back!');
+                navigate('/dashboard', { replace: true });
+                cleanup();
+            }
+        };
+
+        const cleanup = () => {
+            window.removeEventListener('message', handleMessage);
+            window.removeEventListener('storage', handleStorageChange);
         };
         
         window.addEventListener('message', handleMessage);
+        window.addEventListener('storage', handleStorageChange);
     };
 
     return (
