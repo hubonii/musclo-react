@@ -10,6 +10,7 @@ import Button from '../components/ui/Button';
 import LevelBadge from '../components/profile/LevelBadge';
 import AchievementBadge from '../components/profile/AchievementBadge';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
+import Avatar from '../components/ui/Avatar';
 // ChangePasswordModal removed - now integrated in settings
 import { useState, useRef } from 'react';
 import { useToast } from '../components/ui/Toast';
@@ -67,13 +68,11 @@ return (
                     <div className="absolute top-0 left-0 w-full h-24 bg-gradient-to-br from-emerald/20 to-transparent pointer-events-none"/>
 
                     <div className="relative z-10 group">
-                        {profile.avatar_url ? (
-                            <img src={profile.avatar_url} alt={profile.name} className="w-28 h-28 rounded-full shadow-neu object-cover border-4 border-white" loading="lazy"/>
-                        ) : (
-                            <div className="w-28 h-28 rounded-full shadow-neu bg-app flex items-center justify-center border-4 border-divider">
-                                <UserIcon size={48} className="text-text-muted/50"/>
-                            </div>
-                        )}
+                        <Avatar 
+                            name={profile.name} 
+                            src={profile.avatar_url} 
+                            className="w-28 h-28 sm:w-32 sm:h-32 rounded-full shadow-neu border-4 border-white"
+                        />
                         
                         {isOwnProfile && (
                             <>
