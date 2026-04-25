@@ -15,24 +15,17 @@ export default function SettingsPage() {
     const updateSettings = useUpdateSettings();
     const { toast } = useToast();
 const [unitSystem, setUnitSystem] = useState('metric');
-    const theme = useThemeStore((s) => s.theme);
-    const setTheme = useThemeStore((s) => s.setTheme);
-const [restTimer, setRestTimer] = useState(90);
 const [isExporting, setIsExporting] = useState(false);
 useEffect(() => {
         // Hydrates local form state from fetched server settings once loaded.
         if (settings) {
             setUnitSystem(settings.unit_system);
-            setTheme(settings.theme);
-            setRestTimer(settings.default_rest_timer_seconds);
         }
     }, [settings]);
     const handleSave = () => {
         // Sends current form values as partial update payload.
         updateSettings.mutate({
             unit_system: unitSystem,
-            theme,
-            default_rest_timer_seconds: restTimer,
         }, {
             onSuccess: () => toast('success', 'Settings saved successfully.'),
             onError: () => toast('error', 'Failed to save settings.'),
@@ -101,40 +94,13 @@ return (<div className="p-4 md:p-8 max-w-4xl mx-auto pb-32">
                                 </div>
                             </div>
 
-                            <div>
-                                <label className="flex items-center gap-2 text-sm font-bold text-text-secondary mb-3">
-                                    <Sun size={16}/> App Theme
-                                </label>
-                                <div className="flex bg-divider/10 rounded-2xl p-1 shadow-neu-inset w-full max-sm:max-w-xs">
-                                    <button onClick={() => setTheme('light')} className={`flex-1 py-2 text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2 ${theme === 'light' ? 'bg-app shadow-neu text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}>
-                                        <Sun size={14}/> Light
-                                    </button>
-                                    <button onClick={() => setTheme('dark')} className={`flex-1 py-2 text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2 ${theme === 'dark' ? 'bg-app shadow-neu text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}>
-                                        <Moon size={14}/> Dark
-                                    </button>
-                                    <button onClick={() => setTheme('system')} className={`flex-1 py-2 text-sm font-bold rounded-xl transition-colors flex items-center justify-center gap-2 ${theme === 'system' ? 'bg-app shadow-neu text-text-primary' : 'text-text-muted hover:text-text-secondary'}`}>
-                                        <Monitor size={14}/> System
-                                    </button>
+                                 <div className="pt-4 flex justify-end">
+                                    <Button variant="primary" onClick={handleSave} disabled={updateSettings.isPending}>
+                                        <Save size={16} className="mr-2"/>
+                                        {updateSettings.isPending ? 'Saving...' : 'Save Settings'}
+                                    </Button>
                                 </div>
                             </div>
-
-                            <div>
-                                <label className="flex items-center gap-2 text-sm font-bold text-text-secondary mb-3">
-                                    <Clock size={16}/> Default Rest Timer (Seconds)
-                                </label>
-                                <div className="bg-divider/10 shadow-neu-inset rounded-2xl p-2 w-full max-w-xs flex items-center">
-                                    <input type="number" value={restTimer} onChange={(e) => setRestTimer(parseInt(e.target.value) || 0)} className="bg-transparent w-full outline-none text-center font-bold text-text-primary text-lg"/>
-                                </div>
-                                <p className="text-[10px] text-text-muted mt-2 font-semibold">Value will be used as the default countdown timer between sets.</p>
-                            </div>
-
-                            <div className="pt-4 flex justify-end">
-                                <Button variant="primary" onClick={handleSave} disabled={updateSettings.isPending}>
-                                    <Save size={16} className="mr-2"/>
-                                    {updateSettings.isPending ? 'Saving...' : 'Save Settings'}
-                                </Button>
-                            </div>
-                        </div>
                     </Card>
 
                     {/* Data export card */}
