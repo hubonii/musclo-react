@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Mail, Lock } from 'lucide-react';
 import { useAuthStore } from '../../stores/useAuthStore';
-import { getCsrfCookie } from '../../api/axios';
+
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import { useToast } from '../ui/Toast';
@@ -16,8 +16,7 @@ const [password, setPassword] = useState('');
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            // Backend expects a CSRF cookie before auth mutations.
-            await getCsrfCookie();
+
             await login(email, password);
             toast('success', 'Welcome back!');
             navigate('/dashboard', { replace: true });

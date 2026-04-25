@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { User, Mail, Lock } from 'lucide-react';
 import { useAuthStore } from '../../stores/useAuthStore';
-import { getCsrfCookie } from '../../api/axios';
+
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import { useToast } from '../ui/Toast';
@@ -26,8 +26,7 @@ const [validationError, setValidationError] = useState('');
             return;
         }
         try {
-            // Backend expects a CSRF cookie before auth mutations.
-            await getCsrfCookie();
+
             await register(name, email, password, passwordConfirm);
             toast('success', 'Account created!', 'Welcome to Musclo.');
             navigate('/dashboard', { replace: true });
