@@ -319,7 +319,7 @@ export default function AIChatComponent() {
                                     )}
                                 </AnimatePresence>
 
-                                <div className="flex-1 overflow-y-auto p-6 space-y-8 scrollbar-hide bg-app/30">
+                                <div className="flex-1 overflow-y-auto px-6 md:px-10 py-8 space-y-10 scrollbar-hide bg-app/30">
                                     {messages.length === 0 && (
                                         <div className="h-full flex flex-col items-center justify-center text-center p-8 space-y-8">
                                             <div className="w-24 h-24 rounded-[40px] bg-orange text-white flex items-center justify-center shadow-neu-orange border-4 border-white/10">
@@ -342,19 +342,19 @@ export default function AIChatComponent() {
                                     )}
 
                                     {messages.map((msg) => (
-                                        <motion.div key={msg.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className={cn("flex flex-col gap-3", msg.role === 'user' ? "items-end" : "items-start")}>
-                                            <div className={cn("flex gap-5 max-w-[94%]", msg.role === 'user' ? "flex-row-reverse" : "flex-row")}>
+                                        <motion.div key={msg.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className={cn("flex flex-col gap-4 w-full", msg.role === 'user' ? "items-end" : "items-start")}>
+                                            <div className={cn("flex gap-5 max-w-[88%] min-w-0", msg.role === 'user' ? "flex-row-reverse" : "flex-row")}>
                                                 <div className={cn("w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-neu-sm", msg.role === 'user' ? "bg-orange text-white shadow-neu-orange" : "bg-surface text-orange border border-divider/10")}>
                                                     {msg.role === 'user' ? <User size={24} /> : <BrainCircuit size={24} />}
                                                 </div>
-                                                <div className="flex flex-col gap-4 flex-1">
+                                                <div className="flex flex-col gap-4 flex-1 min-w-0">
                                                     {msg.image_url && (
                                                         <div className="rounded-[24px] overflow-hidden shadow-neu-sm border-4 border-white/20 max-w-[280px]">
                                                             <img src={msg.image_url} alt="Reference" className="w-full h-auto object-cover" />
                                                         </div>
                                                     )}
 
-                                                    <div className={cn("p-6 rounded-[32px] text-[15px] leading-[1.7] shadow-neu-sm", msg.role === 'user' ? "bg-orange text-white" : "bg-surface text-text-primary font-medium border border-white/5")}>
+                                                    <div className={cn("p-6 rounded-[32px] text-[15px] leading-[1.8] shadow-neu-sm overflow-hidden", msg.role === 'user' ? "bg-orange text-white" : "bg-surface text-text-primary font-medium border border-white/5")}>
                                                         {/* Thinking indicator — ChatGPT/Gemini style */}
                                                         {msg.role === 'assistant' && msg.isStreaming && !msg.content && (
                                                             <div className="flex items-center gap-3 py-2 px-1">
