@@ -37,6 +37,7 @@ export default function SettingsPage() {
     const [confirmPassword, setConfirmPassword] = useState('');
 
     const [isExporting, setIsExporting] = useState(false);
+    const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
 
     useEffect(() => {
         if (user) {
@@ -70,11 +71,14 @@ export default function SettingsPage() {
                 toast('error', 'File too large', 'Maximum photo size is 5MB.');
                 return;
             }
+            setIsUploadingAvatar(true);
             try {
                 await updateAvatar(file);
                 toast('success', 'Profile photo updated!');
             } catch (err) {
                 toast('error', 'Upload failed', err.message);
+            } finally {
+                setIsUploadingAvatar(false);
             }
         }
     };
@@ -147,13 +151,20 @@ export default function SettingsPage() {
                             <div className="flex flex-col sm:flex-row items-center gap-6">
                                 <div className="relative group">
                                     <Avatar name={name} src={user?.avatar_url} size="lg" className="w-24 h-24 sm:w-32 sm:h-32 border-4 border-white shadow-neu" />
-                                    <button 
-                                        onClick={() => fileInputRef.current?.click()}
-                                        className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white rounded-xl opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
-                                    >
-                                        <Camera size={24} />
-                                        <span className="text-[10px] font-black uppercase mt-1">Change</span>
-                                    </button>
+                                    
+                                    {isUploadingAvatar ? (
+                                        <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 rounded-xl">
+                                            <LoadingSpinner size="sm" color="white" />
+                                        </div>
+                                    ) : (
+                                        <button 
+                                            onClick={() => fileInputRef.current?.click()}
+                                            className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white rounded-xl opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                                        >
+                                            <Camera size={24} />
+                                            <span className="text-[10px] font-black uppercase mt-1">Change</span>
+                                        </button>
+                                    )}
                                     <input type="file" ref={fileInputRef} className="hidden" accept="image/*,image/heic,image/heif" onChange={handleAvatarUpload} />
                                 </div>
                                 <div className="flex-1 text-center sm:text-left space-y-1">

@@ -113,7 +113,6 @@ export const useAuthStore = create()(persist((set, get) => ({
     },
 
     updateAvatar: async (file) => {
-        set({ isLoading: true });
         try {
             const formData = new FormData();
             formData.append('avatar', file);
@@ -126,8 +125,8 @@ export const useAuthStore = create()(persist((set, get) => ({
                 set(state => ({ user: { ...state.user, avatar_url } }));
             }
             return avatar_url;
-        } finally {
-            set({ isLoading: false });
+        } catch (error) {
+            throw error;
         }
     },
 
