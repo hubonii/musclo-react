@@ -7,6 +7,7 @@ import remarkGfm from 'remark-gfm';
 import { useAIChatStore } from '../../stores/useAIChatStore';
 import { useWorkoutStore } from '../../stores/useWorkoutStore';
 import { cn } from '../../lib/utils';
+import { API_URL } from '../../api/axios';
 import { useAuthStore } from '../../stores/useAuthStore';
 import Textarea from '../ui/Textarea';
 
@@ -126,12 +127,13 @@ export default function AIChatComponent() {
         setAbortController(controller);
 
         try {
-            const response = await fetch(`${import.meta.env.VITE_API_URL}/api/chat`, {
+            const response = await fetch(`${API_URL}/api/chat`, {
                 method: 'POST',
                 signal: controller.signal,
                 headers: {
                     'Content-Type': 'application/json',
                     'Accept': 'text/event-stream',
+                    'Authorization': `Bearer ${localStorage.getItem('musclo-token')}`,
                     'X-XSRF-TOKEN': decodeURIComponent(document.cookie.match(/XSRF-TOKEN=([^;]+)/)?.[1] || ''),
                 },
                 credentials: 'include',
