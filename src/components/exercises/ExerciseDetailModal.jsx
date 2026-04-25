@@ -28,7 +28,7 @@ return (<AnimatePresence>
                     <div className="flex-1 overflow-y-auto">
                         <div className="w-full bg-app relative min-h-[300px] sm:min-h-[400px] flex items-center justify-center p-4">
                             {/* Prefer video, then static/gif thumbnail, then a clear no-media fallback. */}
-                            {exercise.video_url ? (<video src={exercise.video_url} className="w-full h-full max-h-[400px] object-contain" loop autoPlay muted playsInline controls/>) : exercise.thumbnail_url || exercise.gif_url ? (<img src={exercise.thumbnail_url || exercise.gif_url || undefined} alt={exercise.name} className="w-full h-full max-h-[400px] object-contain mix-blend-multiply dark:mix-blend-screen"/>) : (<div className="text-text-muted flex flex-col items-center">
+                            {exercise.video_url ? (<video src={exercise.video_url} className="w-full h-full max-h-[400px] object-contain" autoPlay muted playsInline controls/>) : exercise.thumbnail_url || exercise.gif_url ? (<img src={exercise.thumbnail_url || exercise.gif_url || undefined} alt={exercise.name} className="w-full h-full max-h-[400px] object-contain mix-blend-multiply dark:mix-blend-screen"/>) : (<div className="text-text-muted flex flex-col items-center">
                                     <AlertCircle size={48} className="mb-4"/>
                                     <p>No video available</p>
                                 </div>)}
