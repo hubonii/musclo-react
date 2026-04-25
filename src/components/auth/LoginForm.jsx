@@ -125,7 +125,7 @@ export default function LoginForm() {
                     <span className="w-full border-t border-white/10"></span>
                 </div>
                 <div className="relative flex justify-center text-[10px] uppercase font-black tracking-[0.2em]">
-                    <span className="bg-[#f8fafc] dark:bg-[#0f172a] px-3 text-slate-500 dark:text-slate-400">Or continue with</span>
+                    <span className="text-slate-500 dark:text-slate-400">Or continue with</span>
                 </div>
             </div>
 
