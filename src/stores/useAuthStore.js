@@ -164,7 +164,7 @@ export const useAuthStore = create()(persist((set, get) => ({
     deleteAccount: async (password) => {
         set({ isLoading: true });
         try {
-            await apiClient.delete('/profile', { data: { password } });
+            await apiClient.delete('/profile/delete', { data: { password } });
             // Logout after deletion
             set({ user: null, isAuthenticated: false });
             localStorage.removeItem('musclo-auth');
