@@ -10,10 +10,10 @@ export default function AuthLayout({ children }) {
         <div className="min-h-screen flex flex-col md:flex-row bg-app">
             {/* Desktop-only marketing panel */}
             <div className="hidden md:flex flex-1 flex-col justify-center px-16 bg-surface relative overflow-hidden text-center md:text-left">
-                <div className="relative z-10 max-w-sm ml-auto mr-12">
-                    <img 
-                        src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"} 
-                        alt="MUSCLO" 
+                <div className="relative z-10 max-w-sm ml-auto mr-8">
+                    <img
+                        src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"}
+                        alt="MUSCLO"
                         className="h-20 lg:h-24 w-auto max-w-full object-contain mb-2 mx-auto md:mx-0"
                     />
                     <p className="text-2xl font-medium text-text-primary mb-4 leading-tight">
@@ -24,8 +24,8 @@ export default function AuthLayout({ children }) {
                         AI-powered fitness logging built for those who take training seriously.
                     </p>
                 </div>
-                <div className="absolute -top-40 -left-40 w-96 h-96 bg-emerald/20 blur-[100px] rounded-full mix-blend-screen opacity-50"/>
-                <div className="absolute top-40 -right-20 w-80 h-80 bg-tertiary/20 blur-[100px] rounded-full mix-blend-screen opacity-50"/>
+                <div className="absolute -top-40 -left-40 w-96 h-96 bg-emerald/20 blur-[100px] rounded-full mix-blend-screen opacity-50" />
+                <div className="absolute top-40 -right-20 w-80 h-80 bg-tertiary/20 blur-[100px] rounded-full mix-blend-screen opacity-50" />
             </div>
 
             {/* Form panel used on all breakpoints */}
