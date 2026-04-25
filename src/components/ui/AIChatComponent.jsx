@@ -211,7 +211,7 @@ export default function AIChatComponent() {
                             initial={{ opacity: 0, y: 30, scale: 0.95 }}
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: 30, scale: 0.95 }}
-                            className="bg-app border border-white/20 shadow-neu-lg md:rounded-[40px] w-full h-full md:w-[480px] md:h-[750px] flex flex-col pointer-events-auto overflow-hidden relative"
+                            className="bg-app border border-white/20 shadow-neu-lg md:rounded-[40px] w-full h-full md:w-[750px] md:h-[88vh] flex flex-col pointer-events-auto overflow-hidden relative"
                         >
                             <div className="p-5 flex flex-col gap-3 border-b border-divider bg-surface z-20">
                                 <div className="flex items-center justify-between">
@@ -301,18 +301,18 @@ export default function AIChatComponent() {
 
                                     {messages.map((msg) => (
                                         <motion.div key={msg.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className={cn("flex flex-col gap-3", msg.role === 'user' ? "items-end" : "items-start")}>
-                                            <div className={cn("flex gap-4 max-w-[92%]", msg.role === 'user' ? "flex-row-reverse" : "flex-row")}>
-                                                <div className={cn("w-10 h-10 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-neu-sm", msg.role === 'user' ? "bg-orange text-white shadow-neu-orange" : "bg-surface text-orange border border-divider/10")}>
-                                                    {msg.role === 'user' ? <User size={20} /> : <BrainCircuit size={20} />}
+                                            <div className={cn("flex gap-5 max-w-[94%]", msg.role === 'user' ? "flex-row-reverse" : "flex-row")}>
+                                                <div className={cn("w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-neu-sm", msg.role === 'user' ? "bg-orange text-white shadow-neu-orange" : "bg-surface text-orange border border-divider/10")}>
+                                                    {msg.role === 'user' ? <User size={24}/> : <BrainCircuit size={24}/>}
                                                 </div>
-                                                <div className="flex flex-col gap-3">
+                                                <div className="flex flex-col gap-4 flex-1">
                                                     {msg.image_url && (
                                                         <div className="rounded-[24px] overflow-hidden shadow-neu-sm border-4 border-white/20 max-w-[280px]">
                                                             <img src={msg.image_url} alt="Reference" className="w-full h-auto object-cover" />
                                                         </div>
                                                     )}
 
-                                                    <div className={cn("p-5 rounded-[28px] text-[14px] leading-[1.66] shadow-neu-sm", msg.role === 'user' ? "bg-orange text-white" : "bg-surface text-text-primary font-medium border border-white/5")}>
+                                                    <div className={cn("p-6 rounded-[32px] text-[15px] leading-[1.7] shadow-neu-sm", msg.role === 'user' ? "bg-orange text-white" : "bg-surface text-text-primary font-medium border border-white/5")}>
                                                         {/* Thinking indicator — ChatGPT/Gemini style */}
                                                         {msg.role === 'assistant' && msg.isStreaming && !msg.content && (
                                                             <div className="flex items-center gap-3 py-2 px-1">
@@ -332,10 +332,21 @@ export default function AIChatComponent() {
                                                         )}
                                                         {/* Streaming text with blinking cursor */}
                                                         {msg.content && (
-                                                            <div className="prose prose-sm dark:prose-invert max-w-none break-words">
-                                                                <ReactMarkdown remarkPlugins={[remarkGfm]}>{msg.content}</ReactMarkdown>
+                                                            <div className="prose prose-sm dark:prose-invert max-w-none break-words space-y-4">
+                                                                <ReactMarkdown 
+                                                                    remarkPlugins={[remarkGfm]}
+                                                                    components={{
+                                                                        table: ({node, ...props}) => <div className="overflow-x-auto my-4 rounded-2xl border border-divider"><table className="min-w-full divide-y divide-divider" {...props} /></div>,
+                                                                        th: ({node, ...props}) => <th className="px-4 py-3 bg-app text-left text-[11px] font-black uppercase tracking-wider text-text-muted" {...props} />,
+                                                                        td: ({node, ...props}) => <td className="px-4 py-3 text-[13px] border-t border-divider" {...props} />,
+                                                                        h3: ({node, ...props}) => <h3 className="text-orange font-black uppercase tracking-tight text-sm mt-6 mb-2" {...props} />,
+                                                                        p: ({node, ...props}) => <p className="mb-4 last:mb-0" {...props} />
+                                                                    }}
+                                                                >
+                                                                    {msg.content}
+                                                                </ReactMarkdown>
                                                                 {msg.isStreaming && (
-                                                                    <span className="inline-block w-[3px] h-[1.1em] bg-orange/80 ml-0.5 align-middle rounded-full" style={{ animation: 'cursorBlink 0.8s steps(1) infinite' }} />
+                                                                    <span className="inline-block w-[3px] h-[1.1em] bg-orange/80 ml-0.5 align-middle rounded-full" style={{ animation: 'cursorBlink 0.8s steps(1) infinite' }}/>
                                                                 )}
                                                             </div>
                                                         )}
