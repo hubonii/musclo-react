@@ -19,7 +19,6 @@ export default function ProfilePage() {
     const { id } = useParams();
     const navigate = useNavigate();
     const authUser = useAuthStore(s => s.user);
-    const authUser = useAuthStore(s => s.user);
     const { toast } = useToast();
 
     // `me` maps to current user profile when route param is missing.
