@@ -50,6 +50,14 @@ export default function SettingsPage() {
 
     const [isExporting, setIsExporting] = useState(false);
     const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+    const [pendingAvatar, setPendingAvatar] = useState(null);
+    const [avatarPreview, setAvatarPreview] = useState(null);
+
+    useEffect(() => {
+        return () => {
+            if (avatarPreview) URL.revokeObjectURL(avatarPreview);
+        };
+    }, [avatarPreview]);
 
     useEffect(() => {
         if (user) {
@@ -64,15 +72,25 @@ export default function SettingsPage() {
 
     const handleSaveProfile = async () => {
         try {
-            // 1. Update Profile (Name/Email/Bio)
+            // 1. Upload Avatar if pending
+            if (pendingAvatar) {
+                setIsUploadingAvatar(true);
+                await updateAvatar(pendingAvatar);
+                setPendingAvatar(null);
+                setAvatarPreview(null);
+                setIsUploadingAvatar(false);
+            }
+
+            // 2. Update Profile (Name/Email/Bio)
             await updateProfile({ name, email, bio });
             
-            // 2. Update Settings (Units)
+            // 3. Update Settings (Units)
             updateSettingsHook.mutate({ unit_system: unitSystem });
             
             toast('success', 'Profile and settings updated!');
         } catch (err) {
             toast('error', 'Update failed', err.response?.data?.message || err.message);
+            setIsUploadingAvatar(false);
         }
     };
 
@@ -83,16 +101,14 @@ export default function SettingsPage() {
                 toast('error', 'File too large', 'Maximum photo size is 5MB.');
                 return;
             }
-            setIsUploadingAvatar(true);
+            
             try {
-                // Compress the image locally before sending to server
+                // Compress the image locally before showing preview
                 const compressedFile = await compressImage(file, { maxWidth: 800, quality: 0.8 });
-                await updateAvatar(compressedFile);
-                toast('success', 'Profile photo updated!');
+                setPendingAvatar(compressedFile);
+                setAvatarPreview(URL.createObjectURL(compressedFile));
             } catch (err) {
-                toast('error', 'Upload failed', err.message);
-            } finally {
-                setIsUploadingAvatar(false);
+                toast('error', 'Processing failed', err.message);
             }
         }
     };
@@ -197,7 +213,7 @@ export default function SettingsPage() {
                             {/* Avatar Section */}
                             <div className="flex flex-col sm:flex-row items-center gap-6">
                                 <div className="relative group">
-                                    <Avatar name={name} src={user?.avatar_url} size="lg" className="w-24 h-24 sm:w-32 sm:h-32 border-4 border-white shadow-neu" />
+                                    <Avatar name={name} src={avatarPreview || user?.avatar_url} size="lg" className="w-24 h-24 sm:w-32 sm:h-32 border-4 border-white shadow-neu" />
                                     
                                     {isUploadingAvatar ? (
                                         <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/40 rounded-xl">
