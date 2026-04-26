@@ -8,9 +8,10 @@ import Button from '../ui/Button';
 import { useToast } from '../ui/Toast';
 
 export default function EmailVerification() {
-    const [step, setStep] = useState('request'); // 'request' or 'verify'
+    const [step, setStep] = useState('request'); // 'request', 'verify', or 'change'
     const [code, setCode] = useState('');
-    const { verifyEmail, resendVerification, isLoading, user, logout } = useAuthStore();
+    const [newEmail, setNewEmail] = useState('');
+    const { verifyEmail, resendVerification, updateProfile, isLoading, user, logout } = useAuthStore();
     const { toast } = useToast();
     const navigate = useNavigate();
 
@@ -35,6 +36,17 @@ export default function EmailVerification() {
         }
     };
 
+    const handleChangeEmail = async (e) => {
+        e.preventDefault();
+        try {
+            await updateProfile({ email: newEmail });
+            toast('success', 'Email Updated!', `Please verify your new email: ${newEmail}`);
+            setStep('request');
+        } catch (err) {
+            toast('error', 'Update failed', err?.response?.data?.message || 'Could not update email.');
+        }
+    };
+
     const handleLogout = async () => {
         await logout();
         navigate('/login');
@@ -56,9 +68,11 @@ export default function EmailVerification() {
                         {step === 'request' ? 'Verification Required' : 'Enter Code'}
                     </h1>
                     <p className="text-[10px] text-text-secondary font-black uppercase tracking-[0.2em] opacity-60">
-                        {step === 'request' 
-                            ? 'Please verify your email to access your account' 
-                            : `We sent a code to ${user?.email}`}
+                        {step === 'change' 
+                            ? 'Enter your correct email address'
+                            : step === 'request' 
+                                ? 'Please verify your email to access your account' 
+                                : `We sent a code to ${user?.email}`}
                     </p>
                 </div>
             </div>
@@ -81,6 +95,17 @@ export default function EmailVerification() {
                     >
                         Send Verification Code
                     </Button>
+
+                    <button 
+                        type="button"
+                        onClick={() => {
+                            setNewEmail(user?.email || '');
+                            setStep('change');
+                        }}
+                        className="w-full text-[10px] font-black text-text-muted uppercase tracking-[0.2em] hover:text-orange transition-all"
+                    >
+                        Typo in email? Change it
+                    </button>
                 </div>
             )}
 
@@ -111,6 +136,36 @@ export default function EmailVerification() {
                             disabled={isLoading}
                         >
                             Resend Email
+                        </button>
+                    </div>
+                </form>
+            )}
+
+            {/* Step 3: Change Email */}
+            {step === 'change' && (
+                <form onSubmit={handleChangeEmail} className="space-y-6">
+                    <Input 
+                        label="New Email Address" 
+                        type="email" 
+                        value={newEmail} 
+                        onChange={(e) => setNewEmail(e.target.value)} 
+                        icon={<Mail size={18}/>} 
+                        placeholder="your@email.com" 
+                        required
+                    />
+
+                    <div className="space-y-4">
+                        <Button type="submit" variant="primary" className="w-full h-14" isLoading={isLoading}>
+                            Update Email
+                        </Button>
+                        
+                        <button 
+                            type="button"
+                            onClick={() => setStep('request')}
+                            className="w-full text-[10px] font-black text-text-muted uppercase tracking-[0.2em] hover:text-orange transition-all"
+                            disabled={isLoading}
+                        >
+                            Cancel
                         </button>
                     </div>
                 </form>
