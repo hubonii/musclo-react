@@ -354,7 +354,7 @@ export default function AIChatComponent() {
                                         <motion.div key={msg.id} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className={cn("flex flex-col gap-4 w-full", msg.role === 'user' ? "items-end" : "items-start")}>
                                             <div className={cn("flex gap-5 max-w-[88%] min-w-0", msg.role === 'user' ? "flex-row-reverse" : "flex-row")}>
                                                 <div className={cn("w-12 h-12 rounded-2xl flex-shrink-0 flex items-center justify-center shadow-neu-sm", msg.role === 'user' ? "bg-orange text-white shadow-neu-orange" : "bg-surface text-orange border border-divider/10")}>
-                                                    {msg.role === 'user' ? <User size={24} /> : <BrainCircuit size={24} />}
+                                                    {msg.role === 'user' ? <UserIcon size={24} /> : <BrainCircuit size={24} />}
                                                 </div>
                                                 <div className="flex flex-col gap-4 flex-1 min-w-0">
                                                     {msg.image_url && (
