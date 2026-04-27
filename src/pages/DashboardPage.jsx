@@ -34,7 +34,7 @@ export default function DashboardPage() {
         hidden: { opacity: 0, y: 20 },
         visible: { opacity: 1, y: 0 }
     };
-return (<motion.div initial="hidden" animate="visible" variants={containerVariants} className="bg-app pb-24 md:pb-8 w-full px-4 md:px-8 pt-6 max-w-5xl mx-auto overflow-x-hidden">
+return (<motion.div initial="hidden" animate="visible" variants={containerVariants} className="bg-app pb-24 md:pb-8 w-full px-4 md:px-8 pt-6 max-w-5xl mx-auto">
             <WeeklyVolumeHero weeklyVolumeData={weeklyVolumeData} weeklyVolumeSum={weeklyVolumeSum} itemVariants={itemVariants} loading={workoutsLoading}/>
 
             <StatsStrip workoutStats={workoutStats} itemVariants={itemVariants} loading={workoutsLoading}/>

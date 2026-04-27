@@ -139,7 +139,7 @@ return (
                             <LoadingSpinner size="md" message="Loading achievements..." />
                         </div>
                     ) : (
-                        <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 md:grid-cols-8 gap-3 md:gap-4">
+                        <div className="grid grid-cols-3 xs:grid-cols-4 sm:grid-cols-5 md:grid-cols-8 gap-3 md:gap-4 w-full max-w-full overflow-hidden">
                             {(achievements || []).map((ach) => (
                                 <AchievementBadge key={ach.id} {...ach}/>
                             ))}
@@ -168,12 +168,12 @@ return (
                             <p className="text-[10px] font-black uppercase tracking-widest">No shared routines found.</p>
                         </div>
                     ) : (
-                        <div className="flex gap-4 pb-4 snap-x overflow-x-auto scrollbar-hide">
+                        <div className="flex gap-4 pb-4 snap-x overflow-x-auto scrollbar-hide w-full max-w-full touch-pan-x">
                             {(routines || []).map((routine) => (
-                                <div key={routine.id} className="w-64 shrink-0 px-1 py-1 snap-start">
-                                    <div className="bg-app shadow-neu rounded-3xl p-6 border border-divider/10 flex flex-col h-full hover:shadow-neu-orange/5 transition-all">
-                                        <h3 className="font-black text-text-primary mb-2 line-clamp-1 uppercase tracking-tight">{routine.name}</h3>
-                                        <p className="text-[11px] text-text-secondary mb-4 flex-1 line-clamp-2 font-medium">
+                                <div key={routine.id} className="w-[280px] xs:w-64 shrink-0 px-1 py-1 snap-start min-w-0">
+                                    <div className="bg-app shadow-neu rounded-3xl p-6 border border-divider/10 flex flex-col h-full hover:shadow-neu-orange/5 transition-all overflow-hidden">
+                                        <h3 className="font-black text-text-primary mb-2 line-clamp-1 uppercase tracking-tight break-words">{routine.name}</h3>
+                                        <p className="text-[11px] text-text-secondary mb-4 flex-1 line-clamp-2 font-medium break-words">
                                             {routine.notes || 'No notes provided.'}
                                         </p>
                                         <div className="flex items-center justify-between mt-auto">
