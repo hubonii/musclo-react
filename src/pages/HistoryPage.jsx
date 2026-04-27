@@ -13,29 +13,15 @@ import Badge from '../components/ui/Badge';
 import EmptyState from '../components/ui/EmptyState';
 import WorkoutDetailModal from '../components/history/WorkoutDetailModal';
 
+import { useWorkoutHistory } from '../hooks/useWorkoutHistory';
+
 export default function HistoryPage() {
-const [workouts, setWorkouts] = useState([]);
-const [loading, setLoading] = useState(true);
+    const { data: workouts = [], isLoading: loading } = useWorkoutHistory(100);
     // Holds workout id used to open detail modal when a card is selected.
-const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
+    const [selectedWorkoutId, setSelectedWorkoutId] = useState(null);
     const { toast } = useToast();
     const { data: settings } = useSettings();
     const isImperial = settings?.unit_system === 'imperial';
-
-useEffect(() => {
-        // Executes one history fetch on initial page mount.
-        const fetchHistory = async () => {
-            try {
-                const { data } = await apiClient.get('/workouts/history');
-                setWorkouts(data.data);
-            } catch (err) {
-                toast('error', 'Failed to load workout history');
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchHistory();
-    }, [toast]);
 
     // Groups workouts by month/year for sectioned timeline rendering.
     const groupedWorkouts = (workouts || []).reduce((groups, workout) => {

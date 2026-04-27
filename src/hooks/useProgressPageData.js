@@ -3,6 +3,7 @@ import { useState, useRef } from 'react';
 import { useMeasurements, useAddMeasurement, useUpdateMeasurement } from './useMeasurements';
 import { useProgressPhotos, useUploadProgressPhoto, useDeleteProgressPhoto } from './useProgressPhotos';
 import { useToast } from '../components/ui/Toast';
+import { useMemoryStore } from '../stores/useMemoryStore';
 import { groupPhotosByDate, getTodayString } from '../lib/utils';
 export function useProgressPageData() {
     const { toast } = useToast();
@@ -13,8 +14,12 @@ export function useProgressPageData() {
     const { data: photos = [], isLoading: isLoadingPhotos } = useProgressPhotos();
     const { mutateAsync: uploadPhoto, isPending: isUploadingPhoto } = useUploadProgressPhoto();
     const { mutateAsync: deletePhoto } = useDeleteProgressPhoto();
-    const [isMeasurementsOpen, setIsMeasurementsOpen] = useState(false);
-    const [selectedUploadPose, setSelectedUploadPose] = useState('front');
+    const {
+        progressIsMeasurementsOpen: isMeasurementsOpen,
+        setProgressIsMeasurementsOpen: setIsMeasurementsOpen,
+        progressSelectedUploadPose: selectedUploadPose,
+        setProgressSelectedUploadPose: setSelectedUploadPose
+    } = useMemoryStore();
     const [measurementForm, setMeasurementForm] = useState({
         weight_kg: '', chest_cm: '', waist_cm: '', left_arm_cm: '', right_arm_cm: '',
         left_leg_cm: '', right_leg_cm: '', calves_cm: '', shoulders_cm: '',

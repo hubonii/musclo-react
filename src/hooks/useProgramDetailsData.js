@@ -1,60 +1,45 @@
 // Program details hook: load routines, search them, and handle routine deletion.
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { apiClient } from '../api/axios';
 import { useToast } from '../components/ui/Toast';
+import { queryKeys } from '../api/queryKeys';
 
 // Coordinates program detail page data, search filtering, and routine deletion state.
+import { useProgram } from './usePrograms';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+
 export function useProgramDetailsData() {
     const { id: programId } = useParams();
     const navigate = useNavigate();
     const { toast } = useToast();
-    const [program, setProgram] = useState(null);
-    const [routines, setRoutines] = useState([]);
-    const [loading, setLoading] = useState(true);
+    const queryClient = useQueryClient();
+
+    const { data: program, isLoading: loading } = useProgram(programId);
+    const routines = program?.routines || [];
+    
     const [search, setSearch] = useState('');
     const [deleteModalRoutine, setDeleteModalRoutine] = useState(null);
     const [isDeleting, setIsDeleting] = useState(false);
-    const [lastLogMap, setLastLogMap] = useState({});
-    // Load program details and routine list for the page.
-    const fetchProgramDetails = async () => {
-        if (!programId)
-            return;
-        try {
-            const { data } = await apiClient.get(`/programs/${programId}`);
-            setProgram(data.data);
-            setRoutines(data.data.routines || []);
-        }
-        catch (err) {
-            toast('error', 'Failed to load program details');
-            navigate('/programs');
-        }
-        finally {
-            setLoading(false);
-        }
-    };
-    useEffect(() => {
-        fetchProgramDetails();
-    }, [programId]);
-    useEffect(() => {
-        if (routines.length === 0)
-            return;
-        // Load each routine's latest workout date for "last performed" labels.
-        const fetchLastLogs = async () => {
+
+    // Fetch last logs using react-query for caching
+    const { data: lastLogMap = {} } = useQuery({
+        queryKey: ['routines', 'last-logs', programId],
+        queryFn: async () => {
             const results = {};
             await Promise.allSettled(routines.map(async (r) => {
                 try {
                     const { data } = await apiClient.get(`/routines/${r.id}/last-log`);
                     results[r.id] = data.data?.started_at || null;
-                }
-                catch {
+                } catch {
                     results[r.id] = null;
                 }
             }));
-            setLastLogMap(results);
-        };
-        fetchLastLogs();
-    }, [routines]);
+            return results;
+        },
+        enabled: routines.length > 0,
+        staleTime: 60000 // 1 minute
+    });
     // Derived list updates immediately as search text changes.
     const filteredWorkouts = routines.filter(r => r.name.toLowerCase().includes(search.toLowerCase()));
     const handleDeleteRoutine = async () => {
@@ -65,7 +50,7 @@ export function useProgramDetailsData() {
             await apiClient.delete(`/routines/${deleteModalRoutine.id}`);
             toast('success', 'Routine deleted');
             setDeleteModalRoutine(null);
-            fetchProgramDetails();
+            queryClient.invalidateQueries({ queryKey: queryKeys.programs.detail(programId) });
         }
         catch (err) {
             toast('error', 'Failed to delete routine');
@@ -75,7 +60,7 @@ export function useProgramDetailsData() {
         }
     };
     // Summary count used by ProgramBreakdown sidebar card.
-    const totalExercises = routines.reduce((acc, r) => acc + r.exercises.length, 0);
+    const totalExercises = routines.reduce((acc, r) => acc + (r.exercises?.length || 0), 0);
     return {
         programId,
         program,
@@ -89,8 +74,7 @@ export function useProgramDetailsData() {
         isDeleting,
         lastLogMap,
         handleDeleteRoutine,
-        totalExercises,
-        fetchProgramDetails
+        totalExercises
     };
 }
 

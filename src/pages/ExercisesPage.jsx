@@ -1,5 +1,5 @@
 // Exercise library page with search, category chips, and advanced filter modal.
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Search, SlidersHorizontal, WifiOff } from 'lucide-react';
 import { apiClient, API_URL } from '../api/axios';
@@ -14,32 +14,45 @@ import { cn } from '../lib/utils';
 import { cacheSet, cacheGet } from '../lib/offlineCache';
 
 // Loads exercise catalog with search/chip/modal filters and shows detail modal on selection.
+import { useMemoryStore } from '../stores/useMemoryStore';
+
 export default function ExercisesPage() {
+    const { 
+        exercisesSearch: search, setExercisesSearch: setSearch,
+        exercisesCategory: selectedCategory, setExercisesCategory: setSelectedCategory,
+        exercisesBodyPart: selectedBodyPart, setExercisesBodyPart: setSelectedBodyPart,
+        exercisesEquipment: selectedEquipment, setExercisesEquipment: setSelectedEquipment,
+        exercisesPage: page, setExercisesPage: setPage
+    } = useMemoryStore();
+
     const [exercises, setExercises] = useState([]);
     const [loading, setLoading] = useState(true);
     const [loadingMore, setLoadingMore] = useState(false);
     const [isOfflineData, setIsOfflineData] = useState(false);
     
-    const [search, setSearch] = useState('');
-    const [selectedCategory, setSelectedCategory] = useState(null);
-    const [selectedBodyPart, setSelectedBodyPart] = useState(null);
-    const [selectedEquipment, setSelectedEquipment] = useState(null);
-    
     const [selectedExercise, setSelectedExercise] = useState(null);
     const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
     
-    // Pagination state
-    const [page, setPage] = useState(1);
     const [hasMore, setHasMore] = useState(true);
     
     const { toast } = useToast();
 
-    // Reset pagination when filters change
+    // Reset pagination only when search/filters change (excluding initial mount)
+    const prevParams = useRef({ search, selectedCategory, selectedBodyPart, selectedEquipment });
     useEffect(() => {
-        setPage(1);
-        setExercises([]);
-        setHasMore(true);
-    }, [search, selectedCategory, selectedBodyPart, selectedEquipment]);
+        const hasChanged = 
+            prevParams.current.search !== search ||
+            prevParams.current.selectedCategory !== selectedCategory ||
+            prevParams.current.selectedBodyPart !== selectedBodyPart ||
+            prevParams.current.selectedEquipment !== selectedEquipment;
+
+        if (hasChanged) {
+            setPage(1);
+            setExercises([]);
+            setHasMore(true);
+            prevParams.current = { search, selectedCategory, selectedBodyPart, selectedEquipment };
+        }
+    }, [search, selectedCategory, selectedBodyPart, selectedEquipment, setPage]);
 
     useEffect(() => {
         const fetchExercises = async () => {
