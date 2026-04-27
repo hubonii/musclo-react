@@ -78,14 +78,11 @@ return (<AnimatePresence>
                         <div className="overflow-y-auto p-6 space-y-8 flex-1">
                             <section>
                                 <h3 className="text-sm font-bold text-text-primary mb-4 tracking-wide font-display">Equipment</h3>
-                                {isLoading ? (<div className="text-sm text-text-muted">Loading equipment...</div>) : (<div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3">
-                                        {equipmentList.map(eq => (<button key={`eq-${eq}`} onClick={() => setSelectedEquipment(selectedEquipment === eq ? null : eq)} className={cn("flex flex-col items-center gap-2 p-2 rounded-2xl transition-all duration-100", selectedEquipment === eq
+                                {isLoading ? (<div className="text-sm text-text-muted">Loading equipment...</div>) : (<div className="grid grid-cols-3 gap-3">
+                                        {equipmentList.map(eq => (<button key={`eq-${eq}`} onClick={() => setSelectedEquipment(selectedEquipment === eq ? null : eq)} className={cn("flex flex-col items-center justify-center p-4 rounded-2xl transition-all duration-100 min-h-[60px]", selectedEquipment === eq
                         ? "bg-orange/10 text-orange shadow-neu-inset ring-1 ring-orange/20 scale-95"
                         : "bg-surface text-text-secondary hover:bg-divider/10 hover:scale-105 shadow-neu-sm")}>
-                                                <div className="w-12 h-12 rounded-full flex items-center justify-center bg-app shadow-neu-inset text-orange transition-all">
-                                                    {(() => { const EqIcon = getEqIcon(eq); return <EqIcon size={20} strokeWidth={2.5} />; })()}
-                                                </div>
-                                                <span className="text-[10px] font-medium text-center leading-tight capitalize h-6 flex items-center justify-center">{eq}</span>
+                                                <span className="text-[11px] font-black text-center leading-tight capitalize uppercase tracking-tight">{eq}</span>
                                             </button>))}
                                     </div>)}
                             </section>
