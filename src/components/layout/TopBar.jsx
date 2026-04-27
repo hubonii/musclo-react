@@ -19,7 +19,7 @@ return (
                 {/* Center area keeps brand logo fixed between left/right action buttons. */}
                 <NavLink to="/dashboard" className="flex items-center justify-center flex-1 h-12 transition-transform active:scale-95">
                     {/* Swap logo asset to preserve contrast across light/dark themes. */}
-                    <img src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"} alt="MUSCLO" className="h-8 w-auto object-contain"/>
+                    <img src={theme === 'dark' ? "/logo-dark.png" : "/logo.png"} alt="MUSCLO" className="h-8 w-auto max-w-[150px] max-h-8 object-contain"/>
                 </NavLink>
                 <div className="absolute right-4 flex items-center">
                     <NavLink to="/profile" className="p-1">

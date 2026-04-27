@@ -84,8 +84,8 @@ return (
                     </div>
 
                     <div className="flex-1 text-center md:text-left relative z-10 w-full">
-                        <h1 className="text-2xl md:text-3xl font-black text-text-primary tracking-tight">{profile.name}</h1>
-                        <p className="text-sm text-text-secondary mt-1 max-w-md mx-auto md:mx-0">{profile.bio || 'This lifter prefers to let their weights do the talking.'}</p>
+                        <h1 className="text-2xl md:text-3xl font-black text-text-primary tracking-tight break-words">{profile.name}</h1>
+                        <p className="text-sm text-text-secondary mt-1 max-w-md mx-auto md:mx-0 break-words line-clamp-4">{profile.bio || 'This lifter prefers to let their weights do the talking.'}</p>
 
                         <div className="mt-4 flex justify-center md:justify-start">
                             <LevelBadge level={profile.level?.number || 1} title={profile.level?.title || 'Beginner'} progress={profile.level?.progress || 0}/>

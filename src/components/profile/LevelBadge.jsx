@@ -6,7 +6,7 @@ return (<div className="flex flex-col items-center group relative">
             {/* Compact badge row stays visible; details are moved to hover panel below. */}
             <div className="bg-app shadow-neu-sm rounded-full px-4 py-1.5 flex items-center gap-2 border border-divider cursor-help">
                 <span className="text-xl">⭐</span>
-                <span className="font-black text-text-primary">
+                <span className="font-black text-text-primary truncate max-w-[150px]">
                     Lv. {level} <span className="text-text-secondary font-medium px-1">—</span> {title}
                 </span>
             </div>

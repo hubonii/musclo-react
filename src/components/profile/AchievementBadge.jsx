@@ -17,7 +17,7 @@ return (<Tooltip.Root delayDuration={0}>
                     {!unlocked && (<div className="absolute top-2 right-2 text-text-muted/50">
                             <LockIcon size={14}/>
                         </div>)}
-                    <span className={`text-[10px] font-bold text-center leading-tight tracking-tight ${unlocked ? 'text-text-primary' : 'text-text-muted'}`}>
+                    <span className={`text-[10px] font-bold text-center leading-tight tracking-tight break-words line-clamp-2 ${unlocked ? 'text-text-primary' : 'text-text-muted'}`}>
                         {name}
                     </span>
                 </motion.div>

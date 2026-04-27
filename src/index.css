@@ -120,9 +120,11 @@
     --neu-light-lg: rgba(255, 255, 255, 0.1);
   }
 
-  html, body {
+  html, body, #root {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
+    overflow-x: hidden;
+    width: 100%;
   }
 
   body {
@@ -132,7 +134,6 @@
     /* Prevent overall scroll cut-offs */
     min-height: 100vh;
     min-height: 100dvh;
-    overflow-x: hidden;
   }
 
   h1, h2, h3, h4, h5, h6 {
