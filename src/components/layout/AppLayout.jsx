@@ -19,7 +19,7 @@ return (<div className="flex h-[100dvh] w-full bg-app overflow-hidden">
                 {(!isFullscreenPage && !isWorkoutPage) && <TopBar />}
                 <main className="flex-1 overflow-y-auto overflow-x-hidden">
                     <div className={cn(
-                        "w-full h-full",
+                        "w-full h-full max-w-full overflow-x-hidden",
                         (!isFullscreenPage && !isWorkoutPage) && "md:pr-16 lg:pr-24 xl:pr-32"
                     )}>
                         <PageTransition>
