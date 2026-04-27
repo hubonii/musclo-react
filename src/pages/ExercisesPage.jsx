@@ -15,44 +15,59 @@ import { cacheSet, cacheGet } from '../lib/offlineCache';
 
 // Loads exercise catalog with search/chip/modal filters and shows detail modal on selection.
 export default function ExercisesPage() {
-const [exercises, setExercises] = useState([]);
-const [loading, setLoading] = useState(true);
-const [isOfflineData, setIsOfflineData] = useState(false);
+    const [exercises, setExercises] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [loadingMore, setLoadingMore] = useState(false);
+    const [isOfflineData, setIsOfflineData] = useState(false);
     
-const [search, setSearch] = useState('');
-const [selectedCategory, setSelectedCategory] = useState(null); // quick filters
-const [selectedBodyPart, setSelectedBodyPart] = useState(null); // advanced modal
-const [selectedEquipment, setSelectedEquipment] = useState(null);
-    // Selected values above feed API params for advanced filtering.
-const [selectedExercise, setSelectedExercise] = useState(null);
-const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+    const [search, setSearch] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState(null);
+    const [selectedBodyPart, setSelectedBodyPart] = useState(null);
+    const [selectedEquipment, setSelectedEquipment] = useState(null);
+    
+    const [selectedExercise, setSelectedExercise] = useState(null);
+    const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+    
+    // Pagination state
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
     
     const { toast } = useToast();
 
-useEffect(() => {
-        // Debounced request pipeline for search and filter changes.
+    // Reset pagination when filters change
+    useEffect(() => {
+        setPage(1);
+        setExercises([]);
+        setHasMore(true);
+    }, [search, selectedCategory, selectedBodyPart, selectedEquipment]);
+
+    useEffect(() => {
         const fetchExercises = async () => {
-            setLoading(true);
+            if (page === 1) setLoading(true);
+            else setLoadingMore(true);
+
             setIsOfflineData(false);
             try {
-                // Server-side query handles search + selected quick/advanced filters.
                 const { data } = await apiClient.get('/exercises', {
                     params: {
-                        limit: 2000,
+                        limit: 20,
+                        page: page,
                         search: search || undefined,
                         body_part: selectedCategory || selectedBodyPart || undefined,
                         equipment: selectedEquipment || undefined
                     }
                 });
-                setExercises(data.data);
-                // Cache the full unfiltered catalog for offline use.
-                if (!search && !selectedCategory && !selectedBodyPart && !selectedEquipment) {
-                    cacheSet('exercises-catalog', data.data);
+
+                const newExercises = data.data;
+                setExercises(prev => page === 1 ? newExercises : [...prev, ...newExercises]);
+                setHasMore(data.meta.current_page < data.meta.last_page);
+
+                if (page === 1 && !search && !selectedCategory && !selectedBodyPart && !selectedEquipment) {
+                    cacheSet('exercises-catalog', newExercises);
                 }
             } catch (err) {
-                // Fall back to cached exercise catalog when the network is unavailable.
                 const cached = cacheGet('exercises-catalog');
-                if (cached) {
+                if (cached && page === 1) {
                     let filtered = cached;
                     const bp = selectedCategory || selectedBodyPart;
                     if (search) filtered = filtered.filter(ex => ex.name.toLowerCase().includes(search.toLowerCase()));
@@ -60,11 +75,13 @@ useEffect(() => {
                     if (selectedEquipment) filtered = filtered.filter(ex => (ex.equipment || '').toLowerCase() === selectedEquipment.toLowerCase());
                     setExercises(filtered);
                     setIsOfflineData(true);
+                    setHasMore(false);
                 } else {
                     toast('error', 'Failed to load exercises');
                 }
             } finally {
                 setLoading(false);
+                setLoadingMore(false);
             }
         };
 
@@ -72,11 +89,29 @@ useEffect(() => {
             fetchExercises();
         }, 300);
 
-        // Clears pending debounce timer when dependencies change quickly.
-return () => clearTimeout(timeoutId);
-    }, [search, selectedCategory, selectedBodyPart, selectedEquipment, toast]);
+        return () => clearTimeout(timeoutId);
+    }, [search, selectedCategory, selectedBodyPart, selectedEquipment, page, toast]);
 
-return (
+    // Intersection Observer for infinite scroll
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            (entries) => {
+                if (entries[0].isIntersecting && hasMore && !loading && !loadingMore) {
+                    setPage(prev => prev + 1);
+                }
+            },
+            { threshold: 0.1 }
+        );
+
+        const target = document.getElementById('load-more-trigger');
+        if (target) observer.observe(target);
+
+        return () => {
+            if (target) observer.unobserve(target);
+        };
+    }, [hasMore, loading, loadingMore]);
+
+    return (
         <div className="flex flex-col bg-app">
             <div className="p-4 md:p-8 space-y-6 max-w-7xl mx-auto w-full">
                 {/* Search bar */}
@@ -95,7 +130,6 @@ return (
 
                 {/* Quick muscle/category chips + advanced filter button */}
                 <div className="w-full hide-scrollbar flex items-center justify-between gap-3 md:gap-6 px-2 md:px-4 py-4 select-none">
-                    {/* Quick filter chips are static categories mapped to icon assets. */}
                     {[ 
                         { name: 'Cardio', icon: `${API_URL}/storage/exercises/icons/ic_cardio.svg` },
                         { name: 'Chest', icon: `${API_URL}/storage/exercises/icons/ic_chest.svg` },
@@ -151,7 +185,6 @@ return (
 
                 <div className="h-2"/>
 
-                {/* Offline data indicator */}
                 {isOfflineData && (
                     <div className="flex items-center gap-2 px-4 py-2.5 bg-amber-500/10 border border-amber-500/20 rounded-2xl mb-2">
                         <WifiOff size={14} className="text-amber-500 flex-shrink-0"/>
@@ -159,27 +192,33 @@ return (
                     </div>
                 )}
 
-                {/* Exercise result grid with loading and empty states */}
-                {/* Result area branches between loading, empty, and grid states. */}
                 <div className="pt-2">
-                    {loading ? (
-                        <LoadingSpinner size="xl" message="Loading exercises..." className="min-h-[400px] py-20" />
-                    ) : exercises.length === 0 ? (
+                    {loading && exercises.length === 0 ? (
+                        <LoadingSpinner size="xl" message="Loading catalog..." className="min-h-[400px] py-20" />
+                    ) : exercises.length === 0 && !loading ? (
                         <EmptyState title="No exercises found" description="Try adjusting your filters or search terms."/>
                     ) : (
-                        <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6" variants={MOTION.staggerContainer} initial="initial" animate="animate">
-                            <AnimatePresence>
+                        <>
+                            <motion.div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6" variants={MOTION.staggerContainer} initial="initial" animate="animate">
                                 {exercises.map((ex, idx) => (
                                     <ExerciseCard key={`exercise-card-${ex.id}-${idx}`} exercise={ex} onClick={setSelectedExercise}/>
                                 ))}
-                            </AnimatePresence>
-                        </motion.div>
+                            </motion.div>
+                            
+                            {/* Scroll trigger target */}
+                            <div id="load-more-trigger" className="h-20 flex items-center justify-center mt-8">
+                                {loadingMore && (
+                                    <div className="flex flex-col items-center gap-2 opacity-50 scale-75">
+                                        <LoadingSpinner size="sm" />
+                                        <p className="text-[8px] font-black uppercase tracking-[0.2em] text-text-muted">Loading Batch...</p>
+                                    </div>
+                                )}
+                            </div>
+                        </>
                     )}
                 </div>
             </div>
 
-            {/* Modal stack */}
-            {/* Filter modal controls advanced body-part/equipment state used in query params. */}
             <FilterModal 
                 isOpen={isFilterModalOpen} 
                 onClose={() => setIsFilterModalOpen(false)} 
@@ -188,7 +227,6 @@ return (
                 selectedEquipment={selectedEquipment} 
                 setSelectedEquipment={setSelectedEquipment}
             />
-            {/* Detail modal opens when card click sets `selectedExercise`. */}
             <ExerciseDetailModal exercise={selectedExercise} onClose={() => setSelectedExercise(null)}/>
         </div>
     );
