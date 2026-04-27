@@ -25,7 +25,7 @@ export default function WeeklyVolumeHero({ weeklyVolumeData, weeklyVolumeSum, it
                     <p className="text-[10px] md:text-xs font-bold text-text-primary tracking-wide uppercase mb-1">TOTAL VOLUME PER WEEK</p>
                     <div className="flex items-baseline gap-2">
                         <h1 className="text-3xl md:text-5xl font-extrabold text-orange tracking-tighter">
-                            <NumberTicker value={weeklyVolumeSum} />
+                            <NumberTicker value={Math.round(weeklyVolumeSum)} />
                         </h1>
                         <span className="text-base md:text-lg font-bold text-text-muted">kg</span>
                     </div>

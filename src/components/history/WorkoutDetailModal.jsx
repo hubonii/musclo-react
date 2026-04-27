@@ -118,9 +118,9 @@ export default function WorkoutDetailModal({ workoutId, onClose }) {
                             <span className="text-lg font-black text-text-primary">{Math.max(1, Math.round(workout.duration_seconds / 60))}</span>
                             <span className="text-[8px] uppercase font-black text-text-muted tracking-tighter mt-1">Minutes</span>
                         </div>
-                        <div className="bg-divider/10 shadow-neu-inset rounded-[28px] p-4 flex flex-col items-center justify-center text-center border border-orange/10">
+                        <div className="bg-divider/10 shadow-neu-inset rounded-[28px] p-4 flex flex-col items-center justify-center text-center border border-orange/10 min-w-0 overflow-hidden">
                             <Dumbbell size={16} className="text-orange mb-2" />
-                            <span className="text-lg font-black text-text-primary">{formatWeight(workout.total_volume, isImperial ? 'lbs' : 'kg')}</span>
+                            <span className="text-lg font-black text-text-primary truncate w-full">{formatWeight(workout.total_volume, isImperial ? 'lbs' : 'kg')}</span>
                             <span className="text-[8px] uppercase font-black text-text-muted tracking-tighter mt-1">{isImperial ? 'Lbs' : 'Kg'}</span>
                         </div>
                         <div className="bg-divider/5 shadow-neu-inset rounded-[28px] p-4 flex flex-col items-center justify-center text-center">

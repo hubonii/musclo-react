@@ -9,12 +9,21 @@ export function cn(...inputs) {
     return twMerge(clsx(inputs));
 }
 
-// Format weight values for display.
+// Format weight values for display with intelligent rounding and unit conversion.
 export function formatWeight(kg, unit = 'kg') {
-    if (unit === 'lbs') {
-        return `${(kg * 2.20462).toFixed(1)} lbs`;
+    const val = unit === 'lbs' ? (kg * 2.20462) : kg;
+    
+    // For very large volumes (e.g. lifetime total), use 'k' notation to save space.
+    if (val >= 10000) {
+        return `${(val / 1000).toFixed(1).replace(/\.0$/, '')}k ${unit}`;
     }
-    return `${kg} kg`;
+    
+    // For moderate weights, show 1 decimal if needed.
+    if (val >= 100) {
+        return `${Math.round(val)} ${unit}`;
+    }
+    
+    return `${val.toFixed(1).replace(/\.0$/, '')} ${unit}`;
 }
 
 // Format calendar dates for display.

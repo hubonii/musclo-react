@@ -44,8 +44,15 @@ useEffect(() => {
             setIsLoading(true);
             try {
                 const { data } = await apiClient.get('/exercises/filters');
+                
+                // Only keep equipment types explicitly requested by the user for a cleaner UX.
+                const allowedEquipment = ['dumbbell', 'barbell', 'cable', 'machine', 'leverage machine', 'smith machine', 'body weight', 'bodyweight'];
+                const filteredEquipment = (data.data.equipment || []).filter(eq => 
+                    allowedEquipment.includes(eq.toLowerCase())
+                );
+                
                 setBodyPartList(data.data.body_parts || []);
-                setEquipmentList(data.data.equipment || []);
+                setEquipmentList(filteredEquipment);
             }
             catch (err) {
                 console.error("Failed to fetch filters", err);
@@ -83,21 +90,6 @@ return (<AnimatePresence>
                                     </div>)}
                             </section>
 
-                            <hr className="border-divider/5"/>
-
-                            <section>
-                                <h3 className="text-sm font-bold text-text-primary mb-4 tracking-wide font-display">Target Body Part</h3>
-                                {isLoading ? (<div className="text-sm text-text-muted">Loading body parts...</div>) : (<div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 gap-3">
-                                        {bodyPartList.map(bp => (<button key={`bp-${bp}`} onClick={() => setSelectedBodyPart(selectedBodyPart === bp ? null : bp)} className={cn("flex flex-col items-center gap-2 p-2 rounded-2xl transition-all duration-100", selectedBodyPart === bp
-                        ? "bg-orange/10 text-orange shadow-neu-inset ring-1 ring-orange/20 scale-95"
-                        : "bg-surface text-text-secondary hover:bg-divider/10 hover:scale-105 shadow-neu-sm")}>
-                                                 <div className="w-12 h-12 rounded-full flex items-center justify-center bg-app shadow-neu-inset text-orange transition-all">
-                                                    {(() => { const BpIcon = getBpIcon(bp); return <BpIcon size={20} strokeWidth={2.5} />; })()}
-                                                </div>
-                                                <span className="text-[10px] font-medium text-center leading-tight capitalize h-6 flex items-center justify-center">{bp}</span>
-                                            </button>))}
-                                    </div>)}
-                            </section>
                         </div>
 
                          <div className="p-6 bg-app rounded-b-[32px] gap-4 flex shadow-neu-inset border-t border-divider/10">
