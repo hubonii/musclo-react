@@ -168,9 +168,9 @@ export default function ProfilePage() {
                             <p className="text-[10px] font-black uppercase tracking-widest">No shared routines found.</p>
                         </div>
                     ) : (
-                        <div className="flex gap-4 pb-4 snap-x overflow-x-auto scrollbar-hide w-full max-w-full touch-pan-x">
+                        <div className="space-y-4 pb-4 w-full max-w-full">
                             {(routines || []).map((routine) => (
-                                <div key={routine.id} className="w-[280px] xs:w-64 shrink-0 px-1 py-1 snap-start min-w-0">
+                                <div key={routine.id} className="w-full px-1 py-1 min-w-0">
                                     <div className="bg-app shadow-neu rounded-3xl p-6 border border-divider/10 flex flex-col h-full hover:shadow-neu-orange/5 transition-all overflow-hidden">
                                         <h3 className="font-black text-text-primary mb-2 line-clamp-1 uppercase tracking-tight break-words">{routine.name}</h3>
                                         <p className="text-[11px] text-text-secondary mb-4 flex-1 line-clamp-2 font-medium break-words">
