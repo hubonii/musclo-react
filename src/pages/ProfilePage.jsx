@@ -107,21 +107,21 @@ return (
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 md:gap-6">
                     <Card className="flex flex-col items-center justify-center text-center p-6 md:p-8">
                         <Dumbbell className="text-tertiary mb-2 md:mb-3 opacity-80" size={24}/>
-                        <h3 className="text-3xl md:text-5xl font-black text-text-primary tracking-tighter mb-1">
+                        <h3 className="text-3xl md:text-5xl font-black text-text-primary tracking-tighter mb-1 truncate w-full">
                             {profile.stats?.total_workouts || 0}
                         </h3>
                         <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-text-secondary">Total Workouts</p>
                     </Card>
                     <Card className="flex flex-col items-center justify-center text-center p-6 md:p-8">
                         <TrendingUp className="text-emerald mb-2 md:mb-3 opacity-80" size={24}/>
-                        <h3 className="text-3xl md:text-5xl font-black text-text-primary tracking-tighter mb-1">
+                        <h3 className="text-3xl md:text-5xl font-black text-text-primary tracking-tighter mb-1 truncate w-full">
                             {((profile.stats?.total_volume || 0) / 1000).toFixed(1)} <span className="text-xl md:text-2xl text-text-muted">t</span>
                         </h3>
                         <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-text-secondary">Lifetime Volume</p>
                     </Card>
                     <Card className="flex flex-col items-center justify-center text-center p-6 md:p-8">
                         <CalendarDays className="text-tertiary mb-2 md:mb-3 opacity-80" size={24}/>
-                        <h3 className="text-3xl md:text-5xl font-black text-text-primary tracking-tighter mb-1">
+                        <h3 className="text-3xl md:text-5xl font-black text-text-primary tracking-tighter mb-1 truncate w-full">
                             {profile.stats?.current_streak || 0} <span className="text-xl md:text-2xl text-text-muted">🔥</span>
                         </h3>
                         <p className="text-[10px] md:text-xs font-bold uppercase tracking-widest text-text-secondary">Current Streak</p>
@@ -168,7 +168,7 @@ return (
                             <p className="text-[10px] font-black uppercase tracking-widest">No shared routines found.</p>
                         </div>
                     ) : (
-                        <div className="flex gap-4 pb-4 snap-x -mx-2 px-2 overflow-x-auto scrollbar-hide">
+                        <div className="flex gap-4 pb-4 snap-x overflow-x-auto scrollbar-hide">
                             {(routines || []).map((routine) => (
                                 <div key={routine.id} className="w-64 shrink-0 px-1 py-1 snap-start">
                                     <div className="bg-app shadow-neu rounded-3xl p-6 border border-divider/10 flex flex-col h-full hover:shadow-neu-orange/5 transition-all">

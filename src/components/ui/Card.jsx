@@ -4,7 +4,7 @@ import { cn } from '../../lib/utils';
 import { MOTION } from '../../lib/motion';
 export default function Card({ className, hoverable, glass, children, ...props }) {
     // Base class composition shared by static and hoverable card variants.
-    const baseClasses = cn('rounded-3xl border-none p-6 shadow-neu', glass ? 'glass' : 'bg-neu', hoverable && 'cursor-pointer hover:shadow-neu-lg hover:-translate-y-1 active:shadow-neu-inset active:translate-y-0.5', 'transition-colors duration-100', className);
+    const baseClasses = cn('rounded-3xl border-none p-6 shadow-neu overflow-hidden', glass ? 'glass' : 'bg-neu', hoverable && 'cursor-pointer hover:shadow-neu-lg hover:-translate-y-1 active:shadow-neu-inset active:translate-y-0.5', 'transition-colors duration-100', className);
     if (hoverable) {
         // Hoverable cards opt into shared motion preset for lift/tap feedback.
 return (<motion.div className={baseClasses} {...MOTION.hoverLift} {...props}>
