@@ -30,7 +30,7 @@ export default function Avatar({ name, src, size = 'md', className }) {
                 <img 
                     src={src} 
                     alt={name} 
-                    className="h-full w-full object-cover" 
+                    className="h-full w-full object-cover max-w-full" 
                     loading="lazy"
                     onError={() => setImgError(true)}
                 />
