@@ -52,7 +52,7 @@ return (
 
 return (
         <div className="p-4 md:p-8 max-w-5xl mx-auto pb-32">
-            <motion.div {...MOTION.pageEnter} className="space-y-6 md:space-y-8 overflow-x-hidden w-full max-w-full">
+            <motion.div {...MOTION.pageEnter} className="space-y-6 md:space-y-8">
                 
                 {/* Mobile Quick Actions (Theme & Logout) */}
                 {isOwnProfile && (
@@ -83,7 +83,7 @@ return (
                         />
                     </div>
 
-                    <div className="flex-1 text-center md:text-left relative z-10 w-full min-w-0">
+                    <div className="flex-1 text-center md:text-left relative z-10 w-full">
                         <h1 className="text-2xl md:text-3xl font-black text-text-primary tracking-tight break-words">{profile.name}</h1>
                         <p className="text-sm text-text-secondary mt-1 max-w-md mx-auto md:mx-0 break-words line-clamp-4">{profile.bio || 'This lifter prefers to let their weights do the talking.'}</p>
 
