@@ -136,6 +136,7 @@ function App() {
           <ErrorBoundary>
             <OfflineBanner />
             <RouterProvider router={router}/>
+            <SpeedInsights />
             <Analytics />
           </ErrorBoundary>
         </ToastProvider>
